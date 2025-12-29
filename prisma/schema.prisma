@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  roadmaps  Roadmap[]
+  sessions  StudySession[]
+}
+
+model Roadmap {
+  id          String   @id @default(cuid())
+  title       String
+  area        String
+  description String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  steps       Step[]
+  createdAt   DateTime @default(now())
+}
+
+model Step {
+  id        String   @id @default(cuid())
+  title     String
+  order     Int
+  status    String   @default("PENDING") // PENDING, IN_PROGRESS, DONE
+  roadmapId String
+  roadmap   Roadmap  @relation(fields: [roadmapId], references: [id])
+}
+
+model StudySession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  duration  Int      // Minutos focados
+  createdAt DateTime @default(now())
+}

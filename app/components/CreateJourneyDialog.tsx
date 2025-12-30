@@ -42,7 +42,7 @@ export default function CreateJourneyDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="bg-light text-primary font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 transition-transform shadow-[0_0_20px_rgba(189,232,245,0.3)]">
+        <button className="bg-light text-primary font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 hover:cursor-pointer transition-transform shadow-[0_0_20px_rgba(189,232,245,0.3)]">
           <Plus size={20} />
           Criar nova jornada
         </button>
@@ -101,7 +101,7 @@ export default function CreateJourneyDialog() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-soft text-primary font-bold hover:bg-light transition-colors"
+              className="w-full bg-soft text-light font-bold hover:bg-light hover:text-soft hover:cursor-pointer transition-colors"
             >
               {isLoading ? (
                 <>

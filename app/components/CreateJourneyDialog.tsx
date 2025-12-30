@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Plus, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { createJourney } from "../actions/create-journey";
 
 export default function CreateJourneyDialog() {
@@ -32,9 +33,9 @@ export default function CreateJourneyDialog() {
 
     if (response.success) {
       setOpen(false);
-      alert("Jornada criada com sucesso!");
+      toast.success("Jornada criada com sucesso!");
     } else {
-      alert(response.error);
+      toast.error(response.error);
     }
   }
 

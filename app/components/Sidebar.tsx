@@ -21,7 +21,7 @@ export default function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
-            className="flex items-center gap-3 p-3 rounded-lg border-l-light border-l-2 border-0 text-light/80 hover:bg-soft/10 hover:text-light transition-all group"
+            className="flex items-center gap-3 p-3 rounded-lg border-l-light border-l-2 text-light/80 hover:bg-soft/10 hover:text-light transition-all group"
           >
             <item.icon
               size={20}

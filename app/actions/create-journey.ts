@@ -1,8 +1,14 @@
 "use server";
 
+import { generateRoadmapContent } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+interface AIStep {
+  title: string;
+  description: string;
+}
 
 //schema de validação
 const createJourneySchema = z.object({
@@ -40,7 +46,7 @@ export async function createJourney(formData: FormData) {
       });
     }
 
-    await prisma.roadmap.create({
+    const roadmap = await prisma.roadmap.create({
       data: {
         title: result.data.title,
         area: result.data.area,
@@ -48,6 +54,24 @@ export async function createJourney(formData: FormData) {
         userId: user.id,
       },
     });
+
+    const aiSteps = await generateRoadmapContent(
+      result.data.title,
+      result.data.area
+    );
+
+    if (aiSteps && Array.isArray(aiSteps)) {
+      const stepsData = aiSteps.map((step: AIStep, index: number) => ({
+        title: step.title,
+        description: step.description,
+        order: index + 1,
+        roadmapId: roadmap.id,
+      }));
+
+      await prisma.roadmapStep.createMany({
+        data: stepsData,
+      });
+    }
 
     revalidatePath("/minha-jornada");
     return { success: true };

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Clock } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -76,6 +76,51 @@ export default async function JourneyDetails({ params }: PageProps) {
           </div>
         </div>
       </header>
+
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-light flex items-center gap-2">
+          <BookOpen size={24} className="text-soft" />
+          Seu roteiro de estudos
+        </h2>
+
+        <div className="grid gap-4">
+          {roadmap.steps.map((step) => (
+            <div
+              key={step.id}
+              className={`
+                group p-6 rounded-xl border transition-all duration-300 relative overflow-hidden
+                ${
+                  step.isCompleted
+                    ? "bg-soft/10 border-soft/30 opacity-70"
+                    : "bg-medium/20 border-soft/10 hover:border-soft/30 hover:bg-medium/30"
+                }
+              `}
+            >
+              <div className="flex gap-4">
+                <div className="mt-1">
+                  {step.isCompleted ? (
+                    <CheckCircle2 className="text-soft w-6 h-6" />
+                  ) : (
+                    <Circle className="text-soft/40 w-6 h-6 group-hover:text-soft transition-colors" />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h3
+                    className={`text-xl font-semibold mb-2 ${
+                      step.isCompleted ? "text-soft line-through" : "text-light"
+                    }`}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="text-soft/80 leading-relaxed text-sm md:text-base">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

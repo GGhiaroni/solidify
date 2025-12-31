@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ArrowRight, Map } from "lucide-react";
+import Link from "next/link";
 import CreateJourneyDialog from "../components/CreateJourneyDialog";
 
 export default async function MinhaJornada() {
@@ -47,34 +48,40 @@ export default async function MinhaJornada() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {roadmaps.map((roadmap) => (
-            <div
+            <Link
+              href={`/minha-jornada/${roadmap.id}`}
               key={roadmap.id}
-              className="bg-medium/20 border border-soft/10 p-6 rounded-2xl hover:border-soft/30 transition-colors cursor-pointer group flex flex-col justify-between h-[180px]"
+              className="block h-full"
             >
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  <span className="bg-soft/20 text-soft text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
-                    {roadmap.area}
-                  </span>
-                  <ArrowRight
-                    size={18}
-                    className="text-soft opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1"
-                  />
+              <div
+                key={roadmap.id}
+                className="bg-medium/20 border border-soft/10 p-6 rounded-2xl hover:border-soft/30 transition-colors cursor-pointer group flex flex-col justify-between h-[180px]"
+              >
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="bg-soft/20 text-soft text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
+                      {roadmap.area}
+                    </span>
+                    <ArrowRight
+                      size={18}
+                      className="text-soft opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1"
+                    />
+                  </div>
+                  <h4 className="text-lg font-bold text-light mb-2 group-hover:text-white transition-colors line-clamp-2">
+                    {roadmap.title}
+                  </h4>
                 </div>
-                <h4 className="text-lg font-bold text-light mb-2 group-hover:text-white transition-colors line-clamp-2">
-                  {roadmap.title}
-                </h4>
-              </div>
 
-              <div>
-                <div className="w-full bg-primary h-1.5 rounded-full mt-4 overflow-hidden">
-                  <div className="bg-soft h-full w-[5%] rounded-full" />
+                <div>
+                  <div className="w-full bg-primary h-1.5 rounded-full mt-4 overflow-hidden">
+                    <div className="bg-soft h-full w-[5%] rounded-full" />
+                  </div>
+                  <p className="text-xs text-soft mt-2 text-right">
+                    Iniciado agora
+                  </p>
                 </div>
-                <p className="text-xs text-soft mt-2 text-right">
-                  Iniciado agora
-                </p>
               </div>
-            </div>
+            </Link>
           ))}
 
           {roadmaps.length === 0 && (

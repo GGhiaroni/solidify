@@ -3,7 +3,7 @@ import { ArrowRight, Map } from "lucide-react";
 import Link from "next/link";
 import CreateJourneyDialog from "../components/CreateJourneyDialog";
 
-export default async function MinhaJornada() {
+export default async function MinhasJornadas() {
   const roadmaps = await prisma.roadmap.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -49,7 +49,7 @@ export default async function MinhaJornada() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {roadmaps.map((roadmap) => (
             <Link
-              href={`/minha-jornada/${roadmap.id}`}
+              href={`/minhas-jornadas/${roadmap.id}`}
               key={roadmap.id}
               className="block h-full"
             >

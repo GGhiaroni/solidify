@@ -22,7 +22,7 @@ export default async function JourneyDetails({ params }: PageProps) {
   });
 
   if (!roadmap) {
-    redirect("/minha-jornada");
+    redirect("/minhas-jornadas");
   }
 
   const completedSteps = roadmap.steps.filter((s) => s.isCompleted).length;
@@ -33,7 +33,7 @@ export default async function JourneyDetails({ params }: PageProps) {
   return (
     <div className="max-w-4-xl mx-auto space-y-8 animate-in fade-in duration-500 pb-10">
       <Link
-        href="minha-jornada"
+        href="minhas-jornadas"
         className="inline-flex items-center text-soft hover:text-light transition-colors mb-4"
       >
         <ArrowLeft size={16} className="mr-2" />

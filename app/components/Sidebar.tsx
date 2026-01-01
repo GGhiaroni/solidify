@@ -4,7 +4,7 @@ import Logomarca from "./Logomarca";
 
 const menuItems = [
   { icon: Home, label: "Dashboard", href: "/" },
-  { icon: Map, label: "Minha jornada", href: "/minha-jornada" },
+  { icon: Map, label: "Minhas jornadas", href: "/minhas-jornadas" },
   { icon: Timer, label: "Pomodoro", href: "/pomodoro" },
   { icon: BarChart3, label: "Study Tracker", href: "/tracker" },
   { icon: BookOpen, label: "Notas", href: "/notas" },

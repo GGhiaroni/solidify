@@ -1,3 +1,4 @@
+import DeleteJourneyButton from "@/app/components/DeleteJourneyButton";
 import StepItem from "@/app/components/StepItem";
 import { prisma } from "@/lib/prisma";
 import { ArrowLeft, BookOpen, Clock } from "lucide-react";
@@ -54,14 +55,19 @@ export default async function JourneyDetails({ params }: PageProps) {
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-light mb-4">
-            {roadmap.title}
-          </h1>
+          <div className="flex md:flex-row md:items-start justify-between gap-4 mb-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-light mb-2">
+                {roadmap.title}
+              </h1>
+              <p className="text-light/80 text-lg leading-relaxed max-w-2xl">
+                {roadmap.description ||
+                  "Sua trilha personalizada rumo à senioridade."}
+              </p>
+            </div>
 
-          <p className="text-light/80 text-lg leading-relaxed max-w-2xl">
-            {roadmap.description ||
-              "Sua trilha personalizada rumo à senioridade."}
-          </p>
+            <DeleteJourneyButton roadmapId={roadmap.id} />
+          </div>
 
           <div className="mt-8">
             <div className="flex justify-between text-sm mb-2 text-soft">

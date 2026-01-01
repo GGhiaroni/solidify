@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "react-toastify";
 import { deleteJourney } from "../actions/delete-journey";
@@ -37,8 +37,9 @@ export default function DeleteJourneyButton({
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
-          className="text-red-400 hover:text-red-300 hover:bg-red-400/10 gap-2"
+          className="text-red-400 hover:text-red-300 hover:bg-red-400/10 gap-2 hover:cursor-pointer"
         >
+          <Trash2 />
           Excluir jornada
         </Button>
       </AlertDialogTrigger>
@@ -55,7 +56,7 @@ export default function DeleteJourneyButton({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="bg-transparent border-soft/20 text-light hover:bg-medium hover:text-white">
+          <AlertDialogCancel className="bg-transparent border-soft/20 text-light hover:cursor-pointer hover:bg-medium hover:text-white">
             Cancelar
           </AlertDialogCancel>
 
@@ -65,7 +66,7 @@ export default function DeleteJourneyButton({
               handleDelete();
             }}
             disabled={isPending}
-            className="bg-red-500 text-white hover:bg-red-600 border-0"
+            className="hover:cursor-pointer bg-red-500 text-white hover:bg-red-600 border-0"
           >
             {isPending ? (
               <>

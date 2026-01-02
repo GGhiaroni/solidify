@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { RoadmapStatus } from "@prisma/client";
-import { BookOpen, Flame, Target, Trophy } from "lucide-react";
+import { BookOpen, Goal, Target, Trophy } from "lucide-react";
 import React from "react";
 
 export default async function Dashboard() {
@@ -30,6 +30,14 @@ export default async function Dashboard() {
       ? Math.round((completedStepsCount / totalStepsCount) * 100)
       : 0;
 
+  const formatedTitles = (() => {
+    const titles = activeRoadmaps.map((aR) => aR.title);
+
+    if (titles.length <= 2) return titles.join(" | ");
+
+    return `${titles.slice(0, 2).join(" | ")} e +${titles.length - 2}}`;
+  })();
+
   return (
     <div className="space-y-10 pb-20 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -41,7 +49,7 @@ export default async function Dashboard() {
         </div>
 
         <div className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/20 px-6 py-3 rounded-2xl">
-          <Flame className="text-orange-500 animate-pulse" size={28} />
+          🔥
           <div>
             <p className="text-xs text-orange-500/70 font-bold uppercase tracking-widest">
               Streak Atual
@@ -52,24 +60,34 @@ export default async function Dashboard() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <MetricCard
-          icon={<Trophy className="text-yellow-500" />}
-          title="XP Total"
-          value={`${currentXp} XP`}
-          subtext={`${completedStepsCount} passos concluídos`}
-        />
-        <MetricCard
-          icon={<Target className="text-blue-500" />}
-          title="Progresso Global"
-          value={`${overallProgress}%`}
-          progress={overallProgress}
-        />
-        <MetricCard
-          icon={<BookOpen className="text-purple-500" />}
-          title="Jornadas Ativas"
-          value={activeRoadmaps.length.toString()}
-          subtext="Foco total nestas trilhas"
-        />
+        <div className="flex gap-4">
+          <MetricCard
+            icon={<Goal className="text-yellow-500" />}
+            title="xp total disponível"
+            value={`${currentXp} XP`}
+            subtext={`De ${activeRoadmaps.length} jornadas ativas`}
+          />
+          <MetricCard
+            icon={<Trophy className="text-yellow-500" />}
+            title="xp atual"
+            value={`${currentXp} XP`}
+            subtext={`${completedStepsCount} passos concluídos`}
+          />
+        </div>
+        <div className="flex gap-4">
+          <MetricCard
+            icon={<Target className="text-blue-500" />}
+            title="Progresso Global"
+            value={`${overallProgress}%`}
+            progress={overallProgress}
+          />
+          <MetricCard
+            icon={<BookOpen className="text-purple-500" />}
+            title="Jornadas Ativas"
+            value={activeRoadmaps.length.toString()}
+            subtext={formatedTitles}
+          />
+        </div>
       </div>
 
       <section className="space-y-6">
@@ -105,6 +123,7 @@ export default async function Dashboard() {
 interface MetricCardProps {
   icon: React.ReactNode;
   title: string;
+  subtitle?: string;
   value: string | number;
   subtext?: string;
   progress?: number;
@@ -122,7 +141,7 @@ function MetricCard({
     <div className="bg-medium/30 border border-soft/10 p-8 rounded-3xl space-y-4">
       <div className="flex items-center gap-3">
         {icon}
-        <span className="text-soft font-bold uppercase text-xs tracking-tighter">
+        <span className="text-soft font-bold uppercase text-sm tracking-tighter">
           {title}
         </span>
       </div>

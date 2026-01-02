@@ -1,33 +1,45 @@
 import { prisma } from "@/lib/prisma";
 import { RoadmapStatus } from "@prisma/client";
-import { Flame, Target, Trophy } from "lucide-react";
+import { BookOpen, Flame, Target, Trophy } from "lucide-react";
+import React from "react";
 
 export default async function Dashboard() {
   //a primeira coisa que vou fazer aqui é buscar o usuário e, posteriormente, incluir os roadmaps e steps
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email: "dev@solidify.com" },
-      include: {
-        roadmaps: {
-          where: { status: RoadmapStatus.ACTIVE },
-          include: { steps: true },
-        },
+  const user = await prisma.user.findUnique({
+    where: { email: "dev@solidify.com" },
+    include: {
+      roadmaps: {
+        where: { status: RoadmapStatus.ACTIVE },
+        include: { steps: true },
       },
-    });
-  } catch (error) {}
+    },
+  });
+
+  const activeRoadmaps = user?.roadmaps || [];
+
+  const allStepsArray = activeRoadmaps.flatMap((roadmap) => roadmap.steps);
+  const totalStepsCount = allStepsArray.length;
+  const completedStepsCount = allStepsArray.filter(
+    (step) => step.isCompleted
+  ).length;
+
+  const totalXpAvailable = totalStepsCount * 100;
+  const currentXp = completedStepsCount * 100;
+  const overallProgress =
+    totalStepsCount > 0
+      ? Math.round((completedStepsCount / totalStepsCount) * 100)
+      : 0;
 
   return (
     <div className="space-y-10 pb-20 animate-in fade-in duration-700">
-      {/* HEADER COM STREAK */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold text-light">Dashboard</h1>
           <p className="text-soft text-lg">
-            Consolidando seu futuro, um passo por vez.
+            Consolidando seu futuro, um passo de cada vez. 💆🏻‍♂️🍃
           </p>
         </div>
 
-        {/* INDICADOR DE STREAK (Lógica do Ticket 03 entrará aqui depois) */}
         <div className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/20 px-6 py-3 rounded-2xl">
           <Flame className="text-orange-500 animate-pulse" size={28} />
           <div>
@@ -39,19 +51,18 @@ export default async function Dashboard() {
         </div>
       </header>
 
-      {/* CARDS DE MÉTRICAS GLOBAIS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <MetricCard
           icon={<Trophy className="text-yellow-500" />}
           title="XP Total"
-          value={`${totalXP} XP`}
+          value={`${currentXp} XP`}
           subtext={`${completedStepsCount} passos concluídos`}
         />
         <MetricCard
           icon={<Target className="text-blue-500" />}
           title="Progresso Global"
-          value={`${globalPercent}%`}
-          progress={globalPercent}
+          value={`${overallProgress}%`}
+          progress={overallProgress}
         />
         <MetricCard
           icon={<BookOpen className="text-purple-500" />}
@@ -61,7 +72,6 @@ export default async function Dashboard() {
         />
       </div>
 
-      {/* SEÇÃO DE JORNADAS ATIVAS (REUTILIZE SEU LAYOUT DE CARDS) */}
       <section className="space-y-6">
         <h2 className="text-2xl font-bold text-light italic">
           Continuar de onde parei
@@ -70,17 +80,14 @@ export default async function Dashboard() {
         {activeRoadmaps.length === 0 ? (
           <div className="py-20 text-center border-2 border-dashed border-soft/10 rounded-3xl bg-medium/5">
             <p className="text-soft text-lg">
-              Nenhuma jornada ativa. Vá em "Minhas Jornadas" e inicie uma!
+              Nenhuma jornada ativa. Vá em Minhas Jornadas e inicie uma!
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Renderize aqui os cards das jornadas ativas */}
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         )}
       </section>
 
-      {/* ESPAÇO PARA O HEATMAP (TICKET 02) */}
       <section className="bg-medium/20 border border-soft/10 p-8 rounded-3xl">
         <h3 className="text-xl font-bold text-light mb-6">
           Atividade de Estudo
@@ -95,8 +102,22 @@ export default async function Dashboard() {
   );
 }
 
+interface MetricCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: string | number;
+  subtext?: string;
+  progress?: number;
+}
+
 // Subcomponente auxiliar para organizar o layout dos cards de métricas
-function MetricCard({ icon, title, value, subtext, progress }: any) {
+function MetricCard({
+  icon,
+  title,
+  value,
+  subtext,
+  progress,
+}: MetricCardProps) {
   return (
     <div className="bg-medium/30 border border-soft/10 p-8 rounded-3xl space-y-4">
       <div className="flex items-center gap-3">

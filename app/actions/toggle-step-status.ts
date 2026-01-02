@@ -16,7 +16,7 @@ export async function toggleStepStatus(
 
     //caso eu consiga atualizar, já vou revalidar o cachê,
     // forçando o Next.js a recalcular a barra de progresso.
-    revalidatePath(`/minha-jornada/${roadmapId}`);
+    revalidatePath(`/minhas-jornadas/${roadmapId}`);
 
     return { success: true };
   } catch (error) {

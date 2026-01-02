@@ -64,7 +64,7 @@ export default async function Dashboard() {
           <MetricCard
             icon={<Goal className="text-yellow-500" />}
             title="xp total disponível"
-            value={`${currentXp} XP`}
+            value={`${totalXpAvailable} XP`}
             subtext={`De ${activeRoadmaps.length} jornadas ativas`}
           />
           <MetricCard
@@ -77,7 +77,7 @@ export default async function Dashboard() {
         <div className="flex gap-4">
           <MetricCard
             icon={<Target className="text-blue-500" />}
-            title="Progresso Global"
+            title="Progresso geral"
             value={`${overallProgress}%`}
             progress={overallProgress}
           />
@@ -91,7 +91,7 @@ export default async function Dashboard() {
       </div>
 
       <section className="space-y-6">
-        <h2 className="text-2xl font-bold text-light italic">
+        <h2 className="mt-8 text-2xl font-bold text-light italic">
           Continuar de onde parei
         </h2>
 

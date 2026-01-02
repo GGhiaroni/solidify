@@ -7,6 +7,7 @@ import { StartJourneyButton } from "../components/StartJourneyButton";
 export default async function MinhasJornadas() {
   const roadmaps = await prisma.roadmap.findMany({
     orderBy: { createdAt: "desc" },
+    include: { steps: true },
   });
 
   return (

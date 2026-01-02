@@ -30,6 +30,12 @@ export const StartJourneyButton = ({ roadmap }: StartJourneyProps) => {
     });
   }
 
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleStartJourney();
+  };
+
   switch (roadmap.status) {
     case RoadmapStatus.ACTIVE:
       return (
@@ -59,9 +65,9 @@ export const StartJourneyButton = ({ roadmap }: StartJourneyProps) => {
     default:
       return (
         <Button
-          onClick={handleStartJourney}
+          onClick={handleButtonClick}
           disabled={isPending}
-          className="bg-primary hover:bg-medium text-light font-bold gap-2 shadow-lg hover:shadow-primary/20 transition-all"
+          className="bg-primary hover:cursor-pointer hover:bg-medium text-light font-bold gap-2 shadow-lg hover:shadow-primary/20 transition-all"
         >
           {isPending ? (
             <>

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { ArrowRight, Map } from "lucide-react";
 import Link from "next/link";
 import CreateJourneyDialog from "../components/CreateJourneyDialog";
+import { StartJourneyButton } from "../components/StartJourneyButton";
 
 export default async function MinhasJornadas() {
   const roadmaps = await prisma.roadmap.findMany({
@@ -72,13 +73,15 @@ export default async function MinhasJornadas() {
                   </h4>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-4">
                   <div className="w-full bg-primary h-1.5 rounded-full mt-4 overflow-hidden">
+                    {/* Barra de progresso que eu preciso alterar */}
                     <div className="bg-soft h-full w-[5%] rounded-full" />
                   </div>
-                  <p className="text-xs text-soft mt-2 text-right">
-                    Iniciado agora
-                  </p>
+                </div>
+
+                <div className="mt-4">
+                  <StartJourneyButton roadmap={roadmap} />
                 </div>
               </div>
             </Link>

@@ -12,6 +12,9 @@ export default async function startJourney(roadmapId: string) {
     });
 
     revalidatePath(`/minhas-jornadas/${roadmapId}`);
+
+    //atualizo também a página inicial de jornadas;
+    revalidatePath(`/minhas-jornadas`);
     return { success: true };
   } catch (error) {
     console.error("Erro ao iniciar jornada.", error);

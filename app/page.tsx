@@ -13,6 +13,11 @@ export default async function Dashboard() {
         where: { status: RoadmapStatus.ACTIVE },
         include: { steps: true },
       },
+      sessions: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
     },
   });
 

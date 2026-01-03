@@ -59,35 +59,32 @@ export default async function Dashboard() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="flex gap-4">
-          <MetricCard
-            icon={<Goal className="text-yellow-500" />}
-            title="xp total disponível"
-            value={`${totalXpAvailable} XP`}
-            subtext={`De ${activeRoadmaps.length} jornadas ativas`}
-          />
-          <MetricCard
-            icon={<Trophy className="text-yellow-500" />}
-            title="xp atual"
-            value={`${currentXp} XP`}
-            subtext={`${completedStepsCount} passos concluídos`}
-          />
-        </div>
-        <div className="flex gap-4">
-          <MetricCard
-            icon={<Target className="text-blue-500" />}
-            title="Progresso geral"
-            value={`${overallProgress}%`}
-            progress={overallProgress}
-          />
-          <MetricCard
-            icon={<BookOpen className="text-purple-500" />}
-            title="Jornadas Ativas"
-            value={activeRoadmaps.length.toString()}
-            subtext={formatedTitles}
-          />
-        </div>
+      <div className="flex gap-6">
+        <MetricCard
+          icon={<Goal className="text-yellow-500" />}
+          title="xp total disponível"
+          value={`${totalXpAvailable} XP`}
+          subtext={`De ${activeRoadmaps.length} jornadas ativas`}
+        />
+        <MetricCard
+          icon={<Trophy className="text-yellow-500" />}
+          title="xp atual"
+          value={`${currentXp} XP`}
+          subtext={`${completedStepsCount} passos concluídos`}
+        />
+        <MetricCard
+          icon={<Target className="text-blue-500" />}
+          title="Progresso geral"
+          value={`${overallProgress}%`}
+          subtext={`de ${totalStepsCount} passos ativos`}
+          progress={overallProgress}
+        />
+        <MetricCard
+          icon={<BookOpen className="text-purple-500" />}
+          title="Jornadas Ativas"
+          value={activeRoadmaps.length.toString()}
+          subtext={formatedTitles}
+        />
       </div>
 
       <section className="space-y-6">
@@ -169,7 +166,7 @@ function MetricCard({
   progress,
 }: MetricCardProps) {
   return (
-    <div className="bg-medium/30 border border-soft/10 p-8 rounded-3xl space-y-4">
+    <div className="bg-medium/30 border border-soft/10 flex flex-col gap-2 p-8 rounded-3xl space-y-4">
       <div className="flex items-center gap-3">
         {icon}
         <span className="text-soft font-bold uppercase text-sm tracking-tighter">

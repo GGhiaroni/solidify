@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { RoadmapStatus } from "@prisma/client";
+import { format, subDays } from "date-fns";
 import { BookOpen, Goal, Target, Trophy } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { ActivityCalendar } from "react-activity-calendar";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 export default async function Dashboard() {
   //a primeira coisa que vou fazer aqui é buscar o usuário e, posteriormente, incluir os roadmaps e steps
@@ -33,16 +35,25 @@ export default async function Dashboard() {
     return acc;
   }, {} as Record<string, number>);
 
-  const activityData = Object.entries(sessionsMap).map(([date, count]) => {
-    // Regra de Nível (Quanto mais estuda, mais verde fica)
+  const today = new Date();
+
+  const days365 = Array.from({ length: 365 }).map((_, index) => {
+    // Começa de 365 dias atrás até hoje
+    const dateObj = subDays(today, 364 - index);
+    const dateString = format(dateObj, "yyyy-MM-dd");
+
+    // Pega o valor real do banco ou 0 se não tiver nada
+    const count = sessionsMap[dateString] || 0;
+
+    // Regra de Nível (Cores do GitHub Dark)
     let level = 0;
-    if (count > 0) level = 1; // Estudou qualquer coisa
-    if (count >= 30) level = 2; // +30 min
-    if (count >= 60) level = 3; // +1 hora
+    if (count > 0) level = 1; // 1-29 min
+    if (count >= 30) level = 2; // 30-59 min
+    if (count >= 60) level = 3; // 60-119 min
     if (count >= 120) level = 4; // +2 horas
 
     return {
-      date,
+      date: dateString,
       count,
       level,
     };
@@ -187,42 +198,55 @@ export default async function Dashboard() {
         </div>
 
         <div className="w-full flex justify-center py-4 overflow-x-auto">
-          {activityData.length > 0 ? (
-            <ActivityCalendar
-              data={activityData}
-              theme={{
-                light: ["#e1e4e8", "#40c463", "#30a14e", "#216e39", "#216e39"],
-                // Um tema dark personalizado verde/matrix
-                dark: ["#1e1e1e", "#0e4429", "#006d32", "#26a641", "#39d353"],
-              }}
-              labels={{
-                legend: { less: "Menos", more: "Mais" },
-                months: [
-                  "Jan",
-                  "Fev",
-                  "Mar",
-                  "Abr",
-                  "Mai",
-                  "Jun",
-                  "Jul",
-                  "Ago",
-                  "Set",
-                  "Out",
-                  "Nov",
-                  "Dez",
-                ],
-                totalCount: "{{count}} minutos em {{year}}",
-              }}
-              colorScheme="dark"
-              blockSize={14}
-              blockMargin={4}
-              fontSize={12}
-            />
-          ) : (
-            <p className="text-soft italic">
-              Nenhuma atividade registrada ainda.
-            </p>
-          )}
+          {/* Componente do Tooltip Global */}
+          <ReactTooltip
+            id="activity-tooltip"
+            style={{
+              backgroundColor: "#000",
+              color: "#fff",
+              borderRadius: "8px",
+            }}
+          />
+
+          <ActivityCalendar
+            data={days365} // Agora usamos o array completo de 365 dias
+            theme={{
+              light: ["#e1e4e8", "#40c463", "#30a14e", "#216e39", "#216e39"],
+              // 👇 CORES CORRIGIDAS (GitHub Dark Mode Padrão)
+              // Level 0 (Fundo): #161b22
+              // Level 4 (Mais intenso): #39d353 (Verde Neon Brilhante)
+              dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+            }}
+            labels={{
+              legend: { less: "Menos", more: "Mais" },
+              months: [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Abr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Ago",
+                "Set",
+                "Out",
+                "Nov",
+                "Dez",
+              ],
+              totalCount: "{{count}} minutos em {{year}}",
+            }}
+            colorScheme="dark"
+            blockSize={14}
+            blockMargin={4}
+            fontSize={12}
+            // 👇 A MÁGICA DO TOOLTIP ACONTECE AQUI
+            renderBlock={(block, activity) => {
+              return React.cloneElement(block, {
+                "data-tooltip-id": "activity-tooltip",
+                "data-tooltip-content": `${activity.count} minutos em ${activity.date}`,
+              });
+            }}
+          />
         </div>
       </section>
     </div>

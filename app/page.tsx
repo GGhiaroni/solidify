@@ -36,7 +36,7 @@ export default async function Dashboard() {
 
     if (titles.length <= 2) return titles.join(" | ");
 
-    return `${titles.slice(0, 2).join(" | ")} e +${titles.length - 2}}`;
+    return `${titles.slice(0, 2).join(" | ")} e +${titles.length - 2}`;
   })();
 
   return (

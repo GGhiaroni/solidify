@@ -42,8 +42,8 @@ export default async function Dashboard() {
     <div className="space-y-10 pb-20 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-light">Dashboard</h1>
-          <p className="text-soft text-lg">
+          <h1 className="text-3xl font-bold text-light">Dashboard</h1>
+          <p className="text-soft text-lg mb-4">
             Consolidando seu futuro, um passo de cada vez. 💆🏻‍♂️🍃
           </p>
         </div>
@@ -92,9 +92,8 @@ export default async function Dashboard() {
 
       <section className="space-y-6">
         <h2 className="mt-8 text-2xl font-bold text-light italic">
-          Continuar de onde parei
+          Jornadas ativas no momento
         </h2>
-
         {activeRoadmaps.length === 0 ? (
           <div className="py-20 text-center border-2 border-dashed border-soft/10 rounded-3xl bg-medium/5">
             <p className="text-soft text-lg">
@@ -102,11 +101,43 @@ export default async function Dashboard() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+          <div className="bg-medium/20 border border-soft/10 p-8 rounded-3xl flex flex-col gap-4">
+            {activeRoadmaps.map((roadmap) => {
+              const totalSteps = roadmap.steps.length;
+              const completedSteps = roadmap.steps.filter(
+                (s) => s.isCompleted
+              ).length;
+              const progress =
+                totalSteps > 0
+                  ? Math.round((completedSteps / totalSteps) * 100)
+                  : 0;
+
+              return (
+                <div
+                  key={roadmap.id}
+                  className="bg-medium/20 border border-soft/10 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 hover:border-soft/30 transition-colors group cursor-pointer"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-500/10 text-2xl rounded-xl text-blue-500 group-hover:bg-blue-500/20 transition-colors">
+                      🎯
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-light">
+                        {roadmap.title}
+                      </h3>
+                      <p className="text-soft text-sm">
+                        {roadmap.area} • {completedSteps}/{totalSteps} passos
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </section>
 
-      <section className="bg-medium/20 border border-soft/10 p-8 rounded-3xl">
+      <section className="mt-8 bg-medium/20 border border-soft/10 p-8 rounded-3xl">
         <h3 className="text-xl font-bold text-light mb-6">
           Atividade de Estudo
         </h3>

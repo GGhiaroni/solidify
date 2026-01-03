@@ -37,14 +37,14 @@ export default async function Dashboard() {
   const today = new Date();
 
   const days365 = Array.from({ length: 365 }).map((_, index) => {
-    // Começa de 365 dias atrás até hoje
+    //começa de 365 dias atrás até hoje
     const dateObj = subDays(today, 364 - index);
     const dateString = format(dateObj, "yyyy-MM-dd");
 
-    // Pega o valor real do banco ou 0 se não tiver nada
+    //pega o valor real do banco ou 0 se não tiver nada
     const count = sessionsMap[dateString] || 0;
 
-    // Regra de Nível (Cores do GitHub Dark)
+    //regra de Nível (Cores do GitHub Dark)
     let level = 0;
     if (count > 0) level = 1; // 1-29 min
     if (count >= 30) level = 2; // 30-59 min
@@ -81,6 +81,28 @@ export default async function Dashboard() {
     return `${titles.slice(0, 2).join(" | ")} e +${titles.length - 2}`;
   })();
 
+  let currentStreak = 0;
+  let dateToCheck = new Date();
+
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+  const studiedToday = sessionsMap[formatDate(dateToCheck)] || 0 > 0;
+  const studiedYesterday =
+    sessionsMap[formatDate(subDays(dateToCheck, 1))] || 0;
+
+  if (studiedToday || studiedYesterday) {
+    if (!studiedToday) {
+      dateToCheck = subDays(dateToCheck, 1);
+    }
+
+    while ((sessionsMap[formatDate(dateToCheck)] || 0) > 0) {
+      currentStreak++;
+      dateToCheck = subDays(dateToCheck, 1);
+    }
+  } else {
+    currentStreak = 0;
+  }
+
   return (
     <div className="space-y-10 pb-20 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -97,7 +119,9 @@ export default async function Dashboard() {
             <p className="text-xs text-orange-500/70 font-bold uppercase tracking-widest">
               Streak Atual
             </p>
-            <p className="text-2xl font-black text-orange-500">0 Dias</p>
+            <p className="text-2xl font-black text-orange-500">
+              {currentStreak} {currentStreak === 1 ? "Dia" : "Dias"}
+            </p>
           </div>
         </div>
       </header>

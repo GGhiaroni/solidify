@@ -4,8 +4,7 @@ import { format, subDays } from "date-fns";
 import { BookOpen, Goal, Target, Trophy } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { ActivityCalendar } from "react-activity-calendar";
-import { Tooltip as ReactTooltip } from "react-tooltip";
+import { Heatmap } from "./components/Heatmap";
 
 export default async function Dashboard() {
   //a primeira coisa que vou fazer aqui é buscar o usuário e, posteriormente, incluir os roadmaps e steps
@@ -196,58 +195,7 @@ export default async function Dashboard() {
             Último ano
           </span>
         </div>
-
-        <div className="w-full flex justify-center py-4 overflow-x-auto">
-          {/* Componente do Tooltip Global */}
-          <ReactTooltip
-            id="activity-tooltip"
-            style={{
-              backgroundColor: "#000",
-              color: "#fff",
-              borderRadius: "8px",
-            }}
-          />
-
-          <ActivityCalendar
-            data={days365} // Agora usamos o array completo de 365 dias
-            theme={{
-              light: ["#e1e4e8", "#40c463", "#30a14e", "#216e39", "#216e39"],
-              // 👇 CORES CORRIGIDAS (GitHub Dark Mode Padrão)
-              // Level 0 (Fundo): #161b22
-              // Level 4 (Mais intenso): #39d353 (Verde Neon Brilhante)
-              dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
-            }}
-            labels={{
-              legend: { less: "Menos", more: "Mais" },
-              months: [
-                "Jan",
-                "Fev",
-                "Mar",
-                "Abr",
-                "Mai",
-                "Jun",
-                "Jul",
-                "Ago",
-                "Set",
-                "Out",
-                "Nov",
-                "Dez",
-              ],
-              totalCount: "{{count}} minutos em {{year}}",
-            }}
-            colorScheme="dark"
-            blockSize={14}
-            blockMargin={4}
-            fontSize={12}
-            // 👇 A MÁGICA DO TOOLTIP ACONTECE AQUI
-            renderBlock={(block, activity) => {
-              return React.cloneElement(block, {
-                "data-tooltip-id": "activity-tooltip",
-                "data-tooltip-content": `${activity.count} minutos em ${activity.date}`,
-              });
-            }}
-          />
-        </div>
+        <Heatmap data={days365} />
       </section>
     </div>
   );

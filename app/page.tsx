@@ -3,6 +3,7 @@ import { RoadmapStatus } from "@prisma/client";
 import { BookOpen, Goal, Target, Trophy } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { ActivityCalendar } from "react-activity-calendar";
 
 export default async function Dashboard() {
   //a primeira coisa que vou fazer aqui é buscar o usuário e, posteriormente, incluir os roadmaps e steps
@@ -19,6 +20,32 @@ export default async function Dashboard() {
         },
       },
     },
+  });
+
+  const sessionsList = user?.sessions || [];
+
+  const sessionsMap = sessionsList.reduce((acc, session) => {
+    const date = session.createdAt.toISOString().split("T")[0];
+    if (!acc[date]) {
+      acc[date] = 0;
+    }
+    acc[date] += session.duration;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const activityData = Object.entries(sessionsMap).map(([date, count]) => {
+    // Regra de Nível (Quanto mais estuda, mais verde fica)
+    let level = 0;
+    if (count > 0) level = 1; // Estudou qualquer coisa
+    if (count >= 30) level = 2; // +30 min
+    if (count >= 60) level = 3; // +1 hora
+    if (count >= 120) level = 4; // +2 horas
+
+    return {
+      date,
+      count,
+      level,
+    };
   });
 
   const activeRoadmaps = user?.roadmaps || [];
@@ -65,7 +92,7 @@ export default async function Dashboard() {
         </div>
       </header>
 
-      <div className="flex gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
           icon={<Goal className="text-yellow-500" />}
           title="xp total disponível"
@@ -152,13 +179,50 @@ export default async function Dashboard() {
       </section>
 
       <section className="mt-8 bg-medium/20 border border-soft/10 p-8 rounded-3xl">
-        <h3 className="text-xl font-bold text-light mb-6">
-          Atividade de Estudo
-        </h3>
-        <div className="h-40 flex items-center justify-center border border-dashed border-soft/20 rounded-xl">
-          <p className="text-soft/40 italic">
-            O Heatmap do GitHub será renderizado aqui...
-          </p>
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-xl font-bold text-light">Atividade de Estudo</h3>
+          <span className="text-xs text-soft uppercase tracking-widest font-bold">
+            Último ano
+          </span>
+        </div>
+
+        <div className="w-full flex justify-center py-4 overflow-x-auto">
+          {activityData.length > 0 ? (
+            <ActivityCalendar
+              data={activityData}
+              theme={{
+                light: ["#e1e4e8", "#40c463", "#30a14e", "#216e39", "#216e39"],
+                // Um tema dark personalizado verde/matrix
+                dark: ["#1e1e1e", "#0e4429", "#006d32", "#26a641", "#39d353"],
+              }}
+              labels={{
+                legend: { less: "Menos", more: "Mais" },
+                months: [
+                  "Jan",
+                  "Fev",
+                  "Mar",
+                  "Abr",
+                  "Mai",
+                  "Jun",
+                  "Jul",
+                  "Ago",
+                  "Set",
+                  "Out",
+                  "Nov",
+                  "Dez",
+                ],
+                totalCount: "{{count}} minutos em {{year}}",
+              }}
+              colorScheme="dark"
+              blockSize={14}
+              blockMargin={4}
+              fontSize={12}
+            />
+          ) : (
+            <p className="text-soft italic">
+              Nenhuma atividade registrada ainda.
+            </p>
+          )}
         </div>
       </section>
     </div>

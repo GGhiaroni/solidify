@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { RoadmapStatus } from "@prisma/client";
 import { BookOpen, Goal, Target, Trophy } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export default async function Dashboard() {
@@ -110,24 +111,35 @@ export default async function Dashboard() {
                   : 0;
 
               return (
-                <div
-                  key={roadmap.id}
-                  className="bg-medium/20 border border-soft/10 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 hover:border-soft/30 transition-colors group cursor-pointer"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-500/10 text-2xl rounded-xl text-blue-500 group-hover:bg-blue-500/20 transition-colors">
-                      🎯
+                <Link key={roadmap.id} href={`minhas-jornadas/${roadmap.id}`}>
+                  <div className="bg-medium/20 border border-soft/10 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 hover:border-soft/30 transition-colors group cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-blue-500/10 text-2xl rounded-xl text-blue-500 group-hover:bg-blue-500/20 transition-colors">
+                        🎯
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-light">
+                          {roadmap.title}
+                        </h3>
+                        <p className="text-soft text-sm">
+                          {roadmap.area} • {completedSteps}/{totalSteps} passos
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-light">
-                        {roadmap.title}
-                      </h3>
-                      <p className="text-soft text-sm">
-                        {roadmap.area} • {completedSteps}/{totalSteps} passos
-                      </p>
+
+                    <div className="w-full md:w-1/3 flex items-center gap-4">
+                      <div className="w-full bg-black/40 h-3 rounded-full overflow-hidden">
+                        <div
+                          className="bg-blue-500 h-full transition-all duration-1000 ease-out"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <span className="text-light font-bold min-w-[3rem] text-right">
+                        {progress}%
+                      </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

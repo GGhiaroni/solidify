@@ -1,14 +1,40 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Coffee, History, Leaf, PlayIcon, RotateCcw, Zap } from "lucide-react";
+import {
+  Check,
+  Coffee,
+  History,
+  Leaf,
+  PlayIcon,
+  RotateCcw,
+  Zap,
+} from "lucide-react";
 import React from "react";
 import { usePomodoro } from "../context/PomodoroContext";
 
 export default function PomodoroPage() {
-  const { mode, time, isActive, changeMode, toggleTimer, resetTimer } =
-    usePomodoro();
+  const {
+    mode,
+    initialTime,
+    time,
+    isActive,
+    changeMode,
+    toggleTimer,
+    resetTimer,
+    finishEarly,
+  } = usePomodoro();
 
   // função auxiliar para formatar segundos em MM:SS
   const formatTime = (seconds: number) => {
@@ -87,6 +113,51 @@ export default function PomodoroPage() {
             )}
           </Button>
         </div>
+
+        {mode === "focus" && time < initialTime && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                className="mt-4 text-soft hover:text-primary transition-colors gap-2"
+              >
+                <Check size={20} />
+                Finalizar sessão agora
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="bg-[#0D1117] border-white/10 text-light">
+              <DialogHeader>
+                <DialogTitle className="text-xl">Encerrar foco?</DialogTitle>
+                <DialogDescription className="text-soft text-base">
+                  Você focou por um total de{" "}
+                  <span className="font-bold">
+                    {Math.floor((initialTime - time) / 60)} minutos
+                  </span>{" "}
+                  até agora. Deseja encerrar e registrar esse tempo na sua
+                  jornada?
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter className="flex gap-2 sm:gap-0">
+                <DialogClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="hover:cursor-pointer text-soft hover:bg-white/5 hover:text-white"
+                  >
+                    Continuar focado
+                  </Button>
+                </DialogClose>
+                <Button
+                  className="hover:cursor-pointer  bg-primary hover:bg-blue-700 text-white font-bold"
+                  onClick={finishEarly}
+                >
+                  Sim, finalizar
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       <div className="lg:w-[350px] flex flex-col justify-center border-l border-white/5 pl-12 py-10">

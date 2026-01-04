@@ -15,11 +15,13 @@ type TimerMode = "focus" | "short" | "long";
 //interface, o que vai ficar disponível para todas as páginas da aplicação;
 interface PomodoroContextType {
   mode: TimerMode;
+  initialTime: number;
   time: number;
   isActive: boolean;
   changeMode: (mode: TimerMode) => void;
   toggleTimer: () => void; //ligar/desligar o cronômetro;
   resetTimer: () => void; //resetar o cronômetro;
+  finishEarly: () => void;
 }
 
 //criando o contexto, que incialmente está vazio;
@@ -138,15 +140,40 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     changeMode(mode);
   };
 
+  const finishEarly = async () => {
+    setIsActive(false);
+
+    const secondsStudied = initialTime - time;
+    const minutesStudied = Math.floor(secondsStudied / 60);
+
+    if (minutesStudied < 1) {
+      toast.warn("Sessão muito curta para ser registrada.");
+      resetTimer();
+      return;
+    }
+
+    await studySessionLog({
+      minutes: minutesStudied,
+      date: new Date(),
+    });
+
+    toast.success(`Sessão encerrada. +${minutesStudied} min salvos! ✅`);
+
+    playSound("finished");
+    resetTimer();
+  };
+
   return (
     <PomodoroContext.Provider
       value={{
         mode,
+        initialTime,
         time,
         isActive,
         changeMode,
         toggleTimer,
         resetTimer,
+        finishEarly,
       }}
     >
       {children}

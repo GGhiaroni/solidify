@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Coffee, Focus, History, PlayIcon, RotateCcw, Zap } from "lucide-react";
+import { Coffee, History, Leaf, PlayIcon, RotateCcw, Zap } from "lucide-react";
 import React, { useState } from "react";
 
 type TimerMode = "focus" | "short" | "long";
@@ -37,6 +37,7 @@ export default function PomodoroPage() {
             onClick={() => {
               setMode("focus");
               setTime(25 * 60);
+              setIsActive(false);
             }}
             icon={<Zap size={16} />}
             label="Foco"
@@ -46,6 +47,7 @@ export default function PomodoroPage() {
             onClick={() => {
               setMode("short");
               setTime(5 * 60);
+              setIsActive(false);
             }}
             icon={<Coffee size={16} />}
             label="Pausa Curta"
@@ -55,8 +57,9 @@ export default function PomodoroPage() {
             onClick={() => {
               setMode("long");
               setTime(15 * 60);
+              setIsActive(false);
             }}
-            icon={<Focus size={16} />}
+            icon={<Leaf size={16} />}
             label="Pausa Longa"
           />
         </div>

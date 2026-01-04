@@ -77,12 +77,19 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const toggleTimer = () => {
+    if (!isActive) {
+      playSound("start");
+    } else {
+      playSound("pause");
+    }
+    setIsActive(!isActive);
+  };
+
   const handleComplete = async () => {
     setIsActive(false);
 
-    // Tocar som
-    const audio = new Audio("/sounds/bell.mp3");
-    audio.play().catch(() => {});
+    playSound("finished");
 
     if (mode === "focus") {
       const minutesCompleted = initialTime / 60;
@@ -102,7 +109,19 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
 
     if (isActive && time > 0) {
       interval = setInterval(() => {
-        setTime((prev) => prev - 1);
+        setTime((prev) => {
+          const newTime = prev - 1;
+
+          // 🔊 4. LOGICA DOS 2 MINUTOS RESTANTES
+          if (newTime === 120) {
+            playSound("ending");
+            toast.info("Reta final! Faltam apenas 2 minutos. 🚀", {
+              autoClose: 5000,
+            });
+          }
+
+          return newTime;
+        });
       }, 1000);
     } else if (time === 0 && isActive) {
       setTimeout(() => {
@@ -125,7 +144,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         time,
         isActive,
         changeMode,
-        toggleTimer: () => setIsActive(!isActive),
+        toggleTimer,
         resetTimer,
       }}
     >

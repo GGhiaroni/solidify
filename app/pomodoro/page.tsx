@@ -88,7 +88,7 @@ export default function PomodoroPage() {
           <Button
             size="icon"
             variant="ghost"
-            className="w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-transform hover:rotate-180 duration-500"
+            className="hover:cursor-pointer w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-transform hover:rotate-180 duration-500"
             onClick={resetTimer}
           >
             <RotateCcw size={28} />
@@ -96,7 +96,7 @@ export default function PomodoroPage() {
 
           <Button
             className={cn(
-              "w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl hover:scale-110 active:scale-95",
+              "hover:cursor-pointer w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl hover:scale-110 active:scale-95",
               isActive
                 ? "bg-white text-black hover:bg-gray-200"
                 : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-900/50"
@@ -200,7 +200,7 @@ function ModeButton({ active, icon, label, onClick }: ModeButtonProps) {
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
+        "flex hover:cursor-pointer items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
         active
           ? "bg-white/10 text-white shadow-inner"
           : "text-soft hover:text-white hover:bg-white/5"

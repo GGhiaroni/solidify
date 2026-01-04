@@ -30,7 +30,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState(3 * 60);
 
-  const [initialTime, setInitialTime] = useState(25 * 60);
+  const [initialTime, setInitialTime] = useState(3 * 60);
 
   const playSound = (
     type: "start" | "pause" | "ending" | "finished" | "restart"
@@ -61,6 +61,16 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
       audio.play().catch((err) => console.error("Erro ao tocar áudio:", err));
     }
   };
+
+  useEffect(() => {
+    if (time === 120 && isActive) {
+      playSound("ending");
+      toast.info("Reta final! Faltam apenas 2 minutos. 🚀", {
+        autoClose: 5000,
+        toastId: "ending-toast",
+      });
+    }
+  }, [time, isActive]);
 
   const changeMode = (newMode: TimerMode) => {
     setMode(newMode);
@@ -111,28 +121,13 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-
     if (isActive && time > 0) {
       interval = setInterval(() => {
-        setTime((prev) => {
-          const newTime = prev - 1;
-
-          if (newTime === 120) {
-            playSound("ending");
-            toast.info("Reta final! Faltam apenas 2 minutos. 🚀", {
-              autoClose: 5000,
-            });
-          }
-
-          return newTime;
-        });
+        setTime((prev) => prev - 1);
       }, 1000);
     } else if (time === 0 && isActive) {
-      setTimeout(() => {
-        handleComplete();
-      }, 0);
+      setTimeout(() => handleComplete(), 0);
     }
-
     return () => clearInterval(interval);
   }, [isActive, time]);
 

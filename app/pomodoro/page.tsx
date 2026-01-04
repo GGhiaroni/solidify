@@ -23,9 +23,7 @@ export default function PomodoroPage() {
 
   return (
     <div className="h-full flex flex-col lg:flex-row gap-12 animate-in fade-in duration-700">
-      {/* --- BLOCO ESQUERDO: O TIMER ZEN (Sem bordas, flutuando) --- */}
       <div className="flex-1 flex flex-col items-center justify-center relative min-h-[500px]">
-        {/* Fundo de Luz (Glow) muito sutil atrás do número */}
         <div
           className={cn(
             "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px] transition-all duration-1000 opacity-20",
@@ -33,38 +31,44 @@ export default function PomodoroPage() {
           )}
         />
 
-        {/* 1. SELETOR DE MODO (Discreto no topo) */}
         <div className="flex gap-2 mb-16 bg-white/5 p-1 rounded-full backdrop-blur-sm">
           <ModeButton
             active={mode === "focus"}
-            onClick={() => setMode("focus")}
+            onClick={() => {
+              setMode("focus");
+              setTime(25 * 60);
+            }}
             icon={<Zap size={16} />}
             label="Foco"
           />
           <ModeButton
             active={mode === "short"}
-            onClick={() => setMode("short")}
+            onClick={() => {
+              setMode("short");
+              setTime(5 * 60);
+            }}
             icon={<Coffee size={16} />}
             label="Pausa Curta"
           />
           <ModeButton
             active={mode === "long"}
-            onClick={() => setMode("long")}
+            onClick={() => {
+              setMode("long");
+              setTime(15 * 60);
+            }}
             icon={<Focus size={16} />}
             label="Pausa Longa"
           />
         </div>
 
-        {/* 2. O TEMPO (Monstruoso e Limpo) */}
         <div className="relative z-10 font-bold text-[10rem] md:text-[13rem] leading-none tracking-tighter tabular-nums text-white drop-shadow-2xl select-none">
           {formatTime(time)}
         </div>
 
         <p className="text-soft font-medium tracking-[0.3em] uppercase mt-4 mb-12 opacity-60">
-          {isActive ? "Foco Total" : "Pronto para iniciar"}
+          {isActive ? "Foco Total" : "Pronto para iniciar?"}
         </p>
 
-        {/* 3. CONTROLES (Minimalistas) */}
         <div className="flex items-center gap-8 relative z-10">
           <Button
             size="icon"
@@ -96,14 +100,12 @@ export default function PomodoroPage() {
         </div>
       </div>
 
-      {/* --- BLOCO DIREITO: SIDEBAR DISCRETA (Separada visualmente) --- */}
       <div className="lg:w-[350px] flex flex-col justify-center border-l border-white/5 pl-12 py-10">
         <div className="mb-10">
           <h2 className="text-2xl font-bold text-light mb-2">Sessões</h2>
           <p className="text-soft text-sm">Histórico do dia</p>
         </div>
 
-        {/* Lista limpa sem caixas pesadas */}
         <div className="flex-1 space-y-4">
           <div className="flex flex-col items-center justify-center h-[200px] text-center text-soft/40 border border-dashed border-white/5 rounded-2xl">
             <History size={32} className="mb-3 opacity-50" />
@@ -111,10 +113,9 @@ export default function PomodoroPage() {
           </div>
         </div>
 
-        {/* Dica Minimalista */}
         <div className="mt-auto pt-8">
           <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">
-            Dica Tech Lead
+            Dica de produtividade 🍃
           </p>
           <p className="text-soft text-sm leading-relaxed">
             A consistência supera a intensidade. É melhor 25 minutos todo dia do

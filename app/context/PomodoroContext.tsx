@@ -113,6 +113,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         date: new Date(),
       });
       toast.success(`Parabéns! +${minutesCompleted} minutos registrados! 🔥`);
+      setTime(initialTime);
     } else {
       toast.info("Pausa finalizada. Hora de voltar!");
       changeMode("focus");

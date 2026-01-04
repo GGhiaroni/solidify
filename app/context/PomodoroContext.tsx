@@ -28,11 +28,13 @@ const PomodoroContext = createContext({} as PomodoroContextType);
 export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<TimerMode>("focus");
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(25 * 60);
+  const [time, setTime] = useState(3 * 60);
 
   const [initialTime, setInitialTime] = useState(25 * 60);
 
-  const playSound = (type: "start" | "pause" | "ending" | "finished") => {
+  const playSound = (
+    type: "start" | "pause" | "ending" | "finished" | "restart"
+  ) => {
     let file = "";
 
     switch (type) {
@@ -47,6 +49,9 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         break;
       case "finished":
         file = "/sounds/session-finished.wav";
+        break;
+      case "restart":
+        file = "/sounds/click-restart.wav";
         break;
     }
 
@@ -112,7 +117,6 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         setTime((prev) => {
           const newTime = prev - 1;
 
-          // 🔊 4. LOGICA DOS 2 MINUTOS RESTANTES
           if (newTime === 120) {
             playSound("ending");
             toast.info("Reta final! Faltam apenas 2 minutos. 🚀", {
@@ -134,6 +138,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
 
   const resetTimer = () => {
     setIsActive(false);
+    playSound("restart");
     changeMode(mode);
   };
 

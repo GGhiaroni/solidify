@@ -3,14 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Coffee, History, Leaf, PlayIcon, RotateCcw, Zap } from "lucide-react";
-import React, { useState } from "react";
-
-type TimerMode = "focus" | "short" | "long";
+import React from "react";
+import { usePomodoro } from "../context/PomodoroContext";
 
 export default function PomodoroPage() {
-  const [mode, setMode] = useState<TimerMode>("focus");
-  const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(25 * 60);
+  const { mode, time, isActive, changeMode, toggleTimer, resetTimer } =
+    usePomodoro();
 
   // função auxiliar para formatar segundos em MM:SS
   const formatTime = (seconds: number) => {
@@ -34,31 +32,19 @@ export default function PomodoroPage() {
         <div className="flex gap-2 mb-16 bg-white/5 p-1 rounded-full backdrop-blur-sm">
           <ModeButton
             active={mode === "focus"}
-            onClick={() => {
-              setMode("focus");
-              setTime(25 * 60);
-              setIsActive(false);
-            }}
+            onClick={() => changeMode("focus")}
             icon={<Zap size={16} />}
             label="Foco"
           />
           <ModeButton
             active={mode === "short"}
-            onClick={() => {
-              setMode("short");
-              setTime(5 * 60);
-              setIsActive(false);
-            }}
+            onClick={() => changeMode("short")}
             icon={<Coffee size={16} />}
             label="Pausa Curta"
           />
           <ModeButton
             active={mode === "long"}
-            onClick={() => {
-              setMode("long");
-              setTime(15 * 60);
-              setIsActive(false);
-            }}
+            onClick={() => changeMode("long")}
             icon={<Leaf size={16} />}
             label="Pausa Longa"
           />
@@ -77,7 +63,7 @@ export default function PomodoroPage() {
             size="icon"
             variant="ghost"
             className="w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-transform hover:rotate-180 duration-500"
-            onClick={() => {}}
+            onClick={resetTimer}
           >
             <RotateCcw size={28} />
           </Button>
@@ -89,7 +75,7 @@ export default function PomodoroPage() {
                 ? "bg-white text-black hover:bg-gray-200"
                 : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-900/50"
             )}
-            onClick={() => setIsActive(!isActive)}
+            onClick={toggleTimer}
           >
             {isActive ? (
               <div className="flex gap-3">

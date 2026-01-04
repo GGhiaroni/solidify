@@ -119,7 +119,7 @@ export default function PomodoroPage() {
             <DialogTrigger asChild>
               <Button
                 variant="ghost"
-                className="mt-4 text-soft hover:text-primary transition-colors gap-2"
+                className="hover:cursor-pointer text-xl mt-12 text-soft hover:text-primary transition-colors gap-2"
               >
                 <Check size={20} />
                 Finalizar sessão agora

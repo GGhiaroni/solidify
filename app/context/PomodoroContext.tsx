@@ -32,6 +32,31 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
 
   const [initialTime, setInitialTime] = useState(25 * 60);
 
+  const playSound = (type: "start" | "pause" | "ending" | "finished") => {
+    let file = "";
+
+    switch (type) {
+      case "start":
+        file = "/sounds/click-start-focus.wav";
+        break;
+      case "pause":
+        file = "/sounds/click-pause.wav";
+        break;
+      case "ending":
+        file = "/sounds/session-ending.wav";
+        break;
+      case "finished":
+        file = "/sounds/session-finished.wav";
+        break;
+    }
+
+    if (file) {
+      const audio = new Audio(file);
+      audio.volume = 0.6;
+      audio.play().catch((err) => console.error("Erro ao tocar áudio:", err));
+    }
+  };
+
   const changeMode = (newMode: TimerMode) => {
     setMode(newMode);
     setIsActive(false);

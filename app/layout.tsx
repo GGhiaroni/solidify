@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Sidebar from "./components/Sidebar";
 import ToastProvider from "./components/ToastProvider";
+import { PomodoroProvider } from "./context/PomodoroContext";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -25,11 +26,13 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} font-sans bg-primary text-light antialiased flex`}
       >
-        <Sidebar />
-        <main className="flex-1 h-screen overflow-y-auto p-8">
-          {children}
-          <ToastProvider />
-        </main>
+        <PomodoroProvider>
+          <Sidebar />
+          <main className="flex-1 h-screen overflow-y-auto p-8">
+            {children}
+            <ToastProvider />
+          </main>
+        </PomodoroProvider>
       </body>
     </html>
   );

@@ -49,10 +49,12 @@ export default function PomodoroPage() {
     <div className="h-full flex flex-col lg:flex-row gap-12 animate-in fade-in duration-700">
       <div className="flex-1 flex flex-col items-center justify-center relative min-h-[500px]">
         <div
-          className={cn(
-            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px] transition-all duration-1000 opacity-20",
-            isActive ? "bg-blue-600" : "bg-white/5"
-          )}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] pointer-events-none select-none transition-all duration-1000"
+          style={{
+            background: isActive
+              ? "radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, rgba(0, 0, 0, 0) 65%)"
+              : "radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0) 60%)",
+          }}
         />
 
         <div className="flex gap-2 mb-16 bg-white/5 p-1 rounded-full backdrop-blur-sm">

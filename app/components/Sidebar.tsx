@@ -31,6 +31,12 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
+
+      <div className="mt-auto pt-6 border-t border-white/5">
+        <span className="text-xs text-soft block text-center hover:text-white transition-colors cursor-default">
+          feito com 🤍 por Gabriel Tiziano.
+        </span>
+      </div>
     </aside>
   );
 }

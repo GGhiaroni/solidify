@@ -22,6 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 import React from "react";
+import DailyQuote from "../components/DailyQuote";
 import { usePomodoro } from "../context/PomodoroContext";
 
 export default function PomodoroPage() {
@@ -176,12 +177,11 @@ export default function PomodoroPage() {
         </div>
 
         <div className="mt-auto pt-8">
-          <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">
-            Dica de produtividade 🍃
+          <p className="text-sm font-light text-blue-400  tracking-widest mb-2">
+            gota de motivação diária 🍃
           </p>
           <p className="text-soft text-sm leading-relaxed">
-            A consistência supera a intensidade. É melhor 25 minutos todo dia do
-            que 5 horas apenas no sábado.
+            <DailyQuote />
           </p>
         </div>
       </div>

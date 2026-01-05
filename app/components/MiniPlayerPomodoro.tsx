@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Coffee, Leaf, Pause, PlayIcon, Square, Zap } from "lucide-react";
+import { Coffee, Leaf, Pause, PlayIcon, X, Zap } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePomodoro } from "../context/PomodoroContext";
@@ -31,7 +31,7 @@ export default function MiniPlayerPomodoro() {
         <Link href="/pomodoro" className="hover:opacity-80 transition-opacity">
           <div
             className={cn(
-              "w-10 h-10 rounded-xl flex items-center justify-center",
+              "w-10 h-10 rounded-xl flex items-center justify-center hover:cursor-pointer",
               mode === "focus"
                 ? "bg-blue-600/20 text-blue-400"
                 : "bg-emerald-600/20 text-emerald-400"
@@ -56,7 +56,7 @@ export default function MiniPlayerPomodoro() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-lg text-soft hover:text-white"
+            className="hover:cursor-pointer h-8 w-8 rounded-lg text-soft"
             onClick={toggleTimer}
           >
             {isActive ? (
@@ -69,10 +69,10 @@ export default function MiniPlayerPomodoro() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-lg text-soft hover:text-red-400"
+            className="hover:cursor-pointer h-8 w-8 rounded-lg text-soft hover:text-red-400"
             onClick={resetTimer}
           >
-            <Square size={16} fill="currentColor" />
+            <X size={18} fill="currentColor" />
           </Button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import MiniPlayerPomodoro from "./components/MiniPlayerPomodoro";
 import Sidebar from "./components/Sidebar";
 import ToastProvider from "./components/ToastProvider";
 import { PomodoroProvider } from "./context/PomodoroContext";
@@ -32,6 +33,7 @@ export default function RootLayout({
             {children}
             <ToastProvider />
           </main>
+          <MiniPlayerPomodoro />
         </PomodoroProvider>
       </body>
     </html>

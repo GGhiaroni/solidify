@@ -30,9 +30,9 @@ const PomodoroContext = createContext({} as PomodoroContextType);
 export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<TimerMode>("focus");
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(3 * 60);
+  const [time, setTime] = useState(1 * 60);
 
-  const [initialTime, setInitialTime] = useState(3 * 60);
+  const [initialTime, setInitialTime] = useState(1 * 60);
 
   const playSound = (
     type: "start" | "pause" | "ending" | "finished" | "restart"

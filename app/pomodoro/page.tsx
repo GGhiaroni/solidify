@@ -31,6 +31,7 @@ export default function PomodoroPage() {
     initialTime,
     time,
     isActive,
+    todaySessions,
     changeMode,
     toggleTimer,
     resetTimer,
@@ -47,6 +48,11 @@ export default function PomodoroPage() {
       .toString()
       .padStart(2, "0")}`;
   };
+
+  const totalMinutesToday = todaySessions.reduce(
+    (acc, session) => acc + session.duration,
+    0
+  );
 
   return (
     <div className="h-full flex flex-col lg:flex-row gap-12 animate-in fade-in duration-700">
@@ -191,19 +197,64 @@ export default function PomodoroPage() {
         <div className="mb-10">
           <h2 className="text-2xl font-bold text-light mb-2">Sessões</h2>
           <p className="text-soft text-sm">Histórico do dia</p>
+
+          {totalMinutesToday > 0 && (
+            <div className="text-right animate-in fade-in slide-in-from-right-4 duration-700">
+              <span className="text-[10px] text-blue-400 font-bold uppercase tracking-widest block mb-1">
+                Total
+              </span>
+              <span className="text-2xl font-mono font-bold text-white leading-none">
+                {totalMinutesToday}
+                <span className="text-sm font-sans font-normal text-soft ml-1">
+                  min
+                </span>
+              </span>
+            </div>
+          )}
         </div>
 
-        <div className="flex-1 space-y-4">
-          <div className="flex flex-col items-center justify-center h-[200px] text-center text-soft/40 border border-dashed border-white/5 rounded-2xl">
-            <History size={32} className="mb-3 opacity-50" />
-            <p className="text-sm">Nenhum foco hoje</p>
-          </div>
+        <div className="flex-1 space-y-4 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+          {todaySessions.length === 0 ? (
+            // Estado Vazio
+            <div className="flex flex-col items-center justify-center h-[200px] text-center text-soft/40 border border-dashed border-white/5 rounded-2xl">
+              <History size={32} className="mb-3 opacity-50" />
+              <p className="text-sm">Nenhum foco hoje</p>
+            </div>
+          ) : (
+            // Lista Preenchida
+            todaySessions.map((session, index) => (
+              <div
+                key={session.id} // Use o ID vindo do banco ou o random do contexto
+                className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 animate-in slide-in-from-right-4 fade-in duration-500 hover:bg-white/10 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                    <Check size={14} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-light">
+                      Foco Total
+                    </span>
+                    <span className="text-xs text-soft">
+                      {new Date(session.createdAt).toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                </div>
+                <span className="font-mono font-bold text-white">
+                  +{session.duration} min
+                </span>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="mt-auto pt-8">
-          <p className="text-sm font-light text-blue-400  tracking-widest mb-2">
+          <span className="text-sm font-light text-blue-400  tracking-widest mb-2">
             gota de motivação diária 🍃
-          </p>
+          </span>
           <p className="text-soft text-sm leading-relaxed">
             <DailyQuote />
           </p>

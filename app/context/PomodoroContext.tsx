@@ -8,9 +8,17 @@ import {
   useState,
 } from "react";
 import { toast } from "react-toastify";
+import getTodaysessions from "../actions/get-today-sessions";
 import { studySessionLog } from "../actions/study-session-log";
 
 type TimerMode = "focus" | "short" | "long";
+
+interface Session {
+  id: string;
+  name?: string;
+  duration: number;
+  createdAt: Date;
+}
 
 //interface, o que vai ficar disponível para todas as páginas da aplicação;
 interface PomodoroContextType {
@@ -18,6 +26,7 @@ interface PomodoroContextType {
   initialTime: number;
   time: number;
   isActive: boolean;
+  todaySessions: Session[];
   changeMode: (mode: TimerMode) => void;
   toggleTimer: () => void; //ligar/desligar o cronômetro;
   resetTimer: () => void; //resetar o cronômetro;
@@ -35,6 +44,19 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [time, setTime] = useState(1 * 60);
 
   const [initialTime, setInitialTime] = useState(1 * 60);
+
+  const [todaySessions, setTodaySessions] = useState<Session[]>([]);
+
+  useEffect(() => {
+    async function loadSessions() {
+      const data = await getTodaysessions();
+
+      if (Array.isArray(data)) {
+        setTodaySessions(data);
+      }
+    }
+    loadSessions();
+  }, []);
 
   const playSound = (
     type: "start" | "pause" | "ending" | "finished" | "restart"
@@ -105,6 +127,15 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     setIsActive(!isActive);
   };
 
+  const addToTodaySessions = (minutes: number) => {
+    const optimisticSession: Session = {
+      id: Math.random().toString(),
+      duration: minutes,
+      createdAt: new Date(),
+    };
+    setTodaySessions((prev) => [optimisticSession, ...prev]);
+  };
+
   const handleComplete = async () => {
     setIsActive(false);
 
@@ -116,6 +147,9 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         minutes: minutesCompleted,
         date: new Date(),
       });
+
+      addToTodaySessions(minutesCompleted);
+
       toast.success(`Parabéns! +${minutesCompleted} minutos registrados! 🔥`);
       setTime(initialTime);
     } else {
@@ -159,6 +193,8 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
       date: new Date(),
     });
 
+    addToTodaySessions(minutesStudied);
+
     toast.success(`Sessão encerrada. +${minutesStudied} min salvos! ✅`);
 
     playSound("finished");
@@ -182,6 +218,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         initialTime,
         time,
         isActive,
+        todaySessions,
         changeMode,
         toggleTimer,
         resetTimer,

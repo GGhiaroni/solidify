@@ -10,12 +10,13 @@ import {
 import { toast } from "react-toastify";
 import getTodaysessions from "../actions/get-today-sessions";
 import { studySessionLog } from "../actions/study-session-log";
+import updateSessionName from "../actions/update-session-name";
 
 type TimerMode = "focus" | "short" | "long";
 
 interface Session {
   id: string;
-  name?: string;
+  name: string | null;
   duration: number;
   createdAt: Date;
 }
@@ -33,6 +34,7 @@ interface PomodoroContextType {
   finishEarly: () => void;
   addTime: (minutes: number) => void;
   subtractTime: (minutes: number) => void;
+  renameSession: (sessionId: string, newName: string) => void;
 }
 
 //criando o contexto, que incialmente está vazio;
@@ -132,6 +134,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
       id: Math.random().toString(),
       duration: minutes,
       createdAt: new Date(),
+      name: null,
     };
     setTodaySessions((prev) => [optimisticSession, ...prev]);
   };
@@ -211,6 +214,16 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     setInitialTime((prev) => prev - minutes * 60);
   };
 
+  const renameSession = (sessionId: string, newName: string) => {
+    setTodaySessions((prev) =>
+      prev.map((session) =>
+        session.id === sessionId ? { ...session, name: newName } : session
+      )
+    );
+
+    updateSessionName(sessionId, newName);
+  };
+
   return (
     <PomodoroContext.Provider
       value={{
@@ -225,6 +238,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         finishEarly,
         addTime,
         subtractTime,
+        renameSession,
       }}
     >
       {children}

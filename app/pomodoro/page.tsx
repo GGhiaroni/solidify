@@ -36,6 +36,7 @@ export default function PomodoroPage() {
     resetTimer,
     finishEarly,
     addTime,
+    subtractTime,
   } = usePomodoro();
 
   // função auxiliar para formatar segundos em MM:SS
@@ -88,14 +89,25 @@ export default function PomodoroPage() {
           {isActive ? "Foco Total" : "Pronto para iniciar?"}
         </p>
 
-        <div className="flex items-center gap-8 relative z-10">
+        <div className="flex justify-center items-center gap-2 relative z-10">
           <Button
             size="icon"
             variant="ghost"
-            className="hover:cursor-pointer w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-transform hover:rotate-180 duration-500"
+            className="hover:cursor-pointer w-8 h-8 rounded-full text-soft hover:text-white hover:bg-white/10 transition-transform hover:rotate-180 duration-500"
             onClick={resetTimer}
           >
             <RotateCcw size={28} />
+          </Button>
+
+          <Button
+            size="icon"
+            variant="ghost"
+            className="flex gap-1 hover:cursor-pointer w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-all hover:scale-110 duration-300 items-center justify-center"
+            onClick={() => subtractTime(5)}
+            title="Adicionar 5 minutos"
+          >
+            <span className="text-xl font-bold font-mono">-</span>
+            <span className="text-xl font-bold font-mono">5</span>
           </Button>
 
           <Button

@@ -35,6 +35,7 @@ export default function PomodoroPage() {
     toggleTimer,
     resetTimer,
     finishEarly,
+    addTime,
   } = usePomodoro();
 
   // função auxiliar para formatar segundos em MM:SS
@@ -114,6 +115,17 @@ export default function PomodoroPage() {
             ) : (
               <PlayIcon size={48} fill="currentColor" className="ml-2" />
             )}
+          </Button>
+
+          <Button
+            size="icon"
+            variant="ghost"
+            className="flex gap-1 hover:cursor-pointer w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-all hover:scale-110 duration-300 items-center justify-center"
+            onClick={() => addTime(5)}
+            title="Adicionar 5 minutos"
+          >
+            <span className="text-xl font-bold font-mono">+</span>
+            <span className="text-xl font-bold font-mono">5</span>
           </Button>
         </div>
 

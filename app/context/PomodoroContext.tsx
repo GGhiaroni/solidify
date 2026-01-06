@@ -23,6 +23,7 @@ interface PomodoroContextType {
   resetTimer: () => void; //resetar o cronômetro;
   finishEarly: () => void;
   addTime: (minutes: number) => void;
+  subtractTime: (minutes: number) => void;
 }
 
 //criando o contexto, que incialmente está vazio;
@@ -169,6 +170,11 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     setInitialTime((prev) => prev + minutes * 60);
   };
 
+  const subtractTime = (minutes: number) => {
+    setTime((prev) => prev - minutes * 60);
+    setInitialTime((prev) => prev - minutes * 60);
+  };
+
   return (
     <PomodoroContext.Provider
       value={{
@@ -181,6 +187,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         resetTimer,
         finishEarly,
         addTime,
+        subtractTime,
       }}
     >
       {children}

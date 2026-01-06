@@ -22,6 +22,7 @@ interface PomodoroContextType {
   toggleTimer: () => void; //ligar/desligar o cronômetro;
   resetTimer: () => void; //resetar o cronômetro;
   finishEarly: () => void;
+  addTime: (minutes: number) => void;
 }
 
 //criando o contexto, que incialmente está vazio;
@@ -163,6 +164,11 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     resetTimer();
   };
 
+  const addTime = (minutes: number) => {
+    setTime((prev) => prev + minutes * 60);
+    setInitialTime((prev) => prev + minutes * 60);
+  };
+
   return (
     <PomodoroContext.Provider
       value={{
@@ -174,6 +180,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         toggleTimer,
         resetTimer,
         finishEarly,
+        addTime,
       }}
     >
       {children}

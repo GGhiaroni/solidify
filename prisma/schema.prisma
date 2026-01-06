@@ -52,5 +52,6 @@ model StudySession {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   duration  Int      // Minutos focados
+  name String?
   createdAt DateTime @default(now())
 }

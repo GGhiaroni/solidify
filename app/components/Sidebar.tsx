@@ -22,7 +22,7 @@ export default function Sidebar() {
     <aside className="w-64 h-screen bg-medium p-6 flex flex-col sticky top-0">
       <Logomarca />
 
-      <nav className="flex flex-col gap-2 mt-10">
+      <nav className="flex flex-col gap-2">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
 

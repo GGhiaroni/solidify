@@ -11,6 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import {
   Check,
@@ -21,7 +23,7 @@ import {
   RotateCcw,
   Zap,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import DailyQuote from "../components/DailyQuote";
 import SessionItem from "../components/SessionItem";
 import { usePomodoro } from "../context/PomodoroContext";
@@ -39,7 +41,12 @@ export default function PomodoroPage() {
     finishEarly,
     addTime,
     subtractTime,
+    renameSession,
+    setFinishedSession,
+    finishedSession,
   } = usePomodoro();
+
+  const [sessionNameInput, setSessionNameInput] = useState("");
 
   // função auxiliar para formatar segundos em MM:SS
   const formatTime = (seconds: number) => {
@@ -54,6 +61,22 @@ export default function PomodoroPage() {
     (acc, session) => acc + session.duration,
     0
   );
+
+  const handleSaveSessionName = () => {
+    if (sessionNameInput.trim() && finishedSession) {
+      renameSession(finishedSession, sessionNameInput);
+    }
+
+    setFinishedSession(null);
+    setSessionNameInput("");
+  };
+
+  const handleCloseSuccessModal = (isOpen: boolean) => {
+    if (!isOpen) {
+      setFinishedSession(null);
+      setSessionNameInput("");
+    }
+  };
 
   return (
     <div className="h-full flex flex-col lg:flex-row gap-12 animate-in fade-in duration-700">
@@ -195,10 +218,11 @@ export default function PomodoroPage() {
       </div>
 
       <div className="lg:w-[350px] flex flex-col justify-center border-l border-white/5 pl-12 py-10">
-        <div className="mb-10">
-          <h2 className="text-2xl font-bold text-light mb-2">Sessões</h2>
-          <p className="text-soft text-sm">Histórico do dia</p>
-
+        <div className="mb-10 flex justify-between items-end">
+          <div>
+            <h2 className="text-2xl font-bold text-light mb-2">Sessões</h2>
+            <p className="text-soft text-sm">Histórico do dia</p>
+          </div>
           {totalMinutesToday > 0 && (
             <div className="text-right animate-in fade-in slide-in-from-right-4 duration-700">
               <span className="text-[10px] text-blue-400 font-bold uppercase tracking-widest block mb-1">
@@ -221,10 +245,10 @@ export default function PomodoroPage() {
               <p className="text-sm">Nenhum foco hoje</p>
             </div>
           ) : (
-            todaySessions.map((session) => (
+            todaySessions.map((session, index) => (
               <SessionItem
-                key={session.id}
-                id={session.id}
+                key={session.id || index}
+                id={session.id!}
                 name={session.name}
                 duration={session.duration}
                 createdAt={session.createdAt}
@@ -234,14 +258,69 @@ export default function PomodoroPage() {
         </div>
 
         <div className="mt-auto pt-8">
-          <span className="text-sm font-light text-blue-400  tracking-widest mb-2">
+          <span className="text-xs font-medium text-blue-400 tracking-widest mb-2 block">
             gota de motivação diária 🍃
           </span>
-          <p className="text-soft text-sm leading-relaxed">
+          <div className="text-soft text-sm leading-relaxed">
             <DailyQuote />
-          </p>
+          </div>
         </div>
       </div>
+
+      <Dialog open={!!finishedSession} onOpenChange={handleCloseSuccessModal}>
+        <DialogContent className="bg-[#0D1117] border-white/10 text-light sm:max-w-md">
+          <DialogHeader className="space-y-4">
+            <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-2 animate-in zoom-in duration-500">
+              <span className="text-3xl">🔥</span>
+            </div>
+            <DialogTitle className="text-2xl text-center">
+              Ótimo trabalho!
+            </DialogTitle>
+            <DialogDescription className="text-center text-soft text-base">
+              Continue nessa pegada e os resultados virão! 💪🏻🚀
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-6 space-y-4">
+            <div className="space-y-2">
+              <Label
+                htmlFor="name"
+                className="text-soft text-xs uppercase font-bold tracking-wider"
+              >
+                Nome da sessão (Opcional)
+              </Label>
+              <Input
+                id="name"
+                placeholder="Ex: Estudo de React, Leitura, etc..."
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus-visible:ring-blue-500"
+                value={sessionNameInput}
+                onChange={(e) => setSessionNameInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSaveSessionName()}
+                autoFocus
+              />
+              <p className="text-[11px] text-soft/50">
+                {`Se deixar em branco, será salvo como "Foco Total"`}.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => handleCloseSuccessModal(false)}
+              className="w-full sm:w-auto hover:cursor-pointer text-soft hover:text-white hover:bg-white/5"
+            >
+              Pular
+            </Button>
+            <Button
+              onClick={handleSaveSessionName}
+              className="w-full sm:w-auto hover:cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            >
+              Salvar nome
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

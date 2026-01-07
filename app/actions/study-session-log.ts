@@ -16,7 +16,7 @@ export async function studySessionLog({ minutes, date }: StudySessionLogProps) {
 
     if (!user) return { success: false, error: "Usuário não encontrado" };
 
-    await prisma.studySession.create({
+    const studySessionCreated = await prisma.studySession.create({
       data: {
         userId: user.id,
         duration: minutes,
@@ -26,7 +26,7 @@ export async function studySessionLog({ minutes, date }: StudySessionLogProps) {
 
     revalidatePath("/");
 
-    return { success: true };
+    return { success: true, session: studySessionCreated };
   } catch (error) {
     console.error("Erro ao registrar sessão de estudos.", error);
     return { success: false, error: "Erro ao registrar sessão de estudos." };

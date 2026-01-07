@@ -15,7 +15,7 @@ import updateSessionName from "../actions/update-session-name";
 type TimerMode = "focus" | "short" | "long";
 
 interface Session {
-  id: string;
+  id: string | null;
   name: string | null;
   duration: number;
   createdAt: Date;
@@ -28,6 +28,7 @@ interface PomodoroContextType {
   time: number;
   isActive: boolean;
   todaySessions: Session[];
+  finishedSession: string | null;
   changeMode: (mode: TimerMode) => void;
   toggleTimer: () => void; //ligar/desligar o cronômetro;
   resetTimer: () => void; //resetar o cronômetro;
@@ -35,6 +36,7 @@ interface PomodoroContextType {
   addTime: (minutes: number) => void;
   subtractTime: (minutes: number) => void;
   renameSession: (sessionId: string, newName: string) => void;
+  setFinishedSession: (id: string | null) => void;
 }
 
 //criando o contexto, que incialmente está vazio;
@@ -48,6 +50,8 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [initialTime, setInitialTime] = useState(1 * 60);
 
   const [todaySessions, setTodaySessions] = useState<Session[]>([]);
+
+  const [finishedSession, setFinishedSession] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadSessions() {
@@ -129,9 +133,9 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     setIsActive(!isActive);
   };
 
-  const addToTodaySessions = (minutes: number) => {
+  const addToTodaySessions = (minutes: number, realId?: string) => {
     const optimisticSession: Session = {
-      id: Math.random().toString(),
+      id: realId || Math.random().toString(),
       duration: minutes,
       createdAt: new Date(),
       name: null,
@@ -146,12 +150,15 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
 
     if (mode === "focus") {
       const minutesCompleted = initialTime / 60;
-      await studySessionLog({
+
+      const studySessionSaved = await studySessionLog({
         minutes: minutesCompleted,
         date: new Date(),
       });
 
-      addToTodaySessions(minutesCompleted);
+      addToTodaySessions(minutesCompleted, studySessionSaved.session?.id);
+
+      setFinishedSession(studySessionSaved.session?.id || null);
 
       toast.success(`Parabéns! +${minutesCompleted} minutos registrados! 🔥`);
       setTime(initialTime);
@@ -191,12 +198,14 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    await studySessionLog({
+    const studySessionSaved = await studySessionLog({
       minutes: minutesStudied,
       date: new Date(),
     });
 
-    addToTodaySessions(minutesStudied);
+    setFinishedSession(studySessionSaved.session?.id || null);
+
+    addToTodaySessions(minutesStudied, studySessionSaved.session?.id);
 
     toast.success(`Sessão encerrada. +${minutesStudied} min salvos! ✅`);
 
@@ -239,6 +248,8 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         addTime,
         subtractTime,
         renameSession,
+        finishedSession,
+        setFinishedSession,
       }}
     >
       {children}

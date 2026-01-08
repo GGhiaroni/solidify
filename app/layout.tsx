@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import LofiPlayer from "./components/LofiPlayer";
 import MiniPlayerPomodoro from "./components/MiniPlayerPomodoro";
 import Sidebar from "./components/Sidebar";
 import ToastProvider from "./components/ToastProvider";
+import { LofiProvider } from "./context/LofiContext";
 import { PomodoroProvider } from "./context/PomodoroContext";
 import "./globals.css";
 
@@ -28,12 +30,15 @@ export default function RootLayout({
         className={`${montserrat.variable} font-sans bg-primary text-light antialiased flex`}
       >
         <PomodoroProvider>
-          <Sidebar />
-          <main className="flex-1 h-screen overflow-y-auto p-8">
-            {children}
+          <LofiProvider>
+            <Sidebar />
+            <main className="flex-1 h-screen overflow-y-auto p-8">
+              {children}
+            </main>
+            <LofiPlayer />
+            <MiniPlayerPomodoro />
             <ToastProvider />
-          </main>
-          <MiniPlayerPomodoro />
+          </LofiProvider>
         </PomodoroProvider>
       </body>
     </html>

@@ -12,7 +12,7 @@ const menuItems = [
   { icon: Timer, label: "Pomodoro", href: "/pomodoro" },
   { icon: BarChart3, label: "Study Tracker", href: "/tracker" },
   { icon: BookOpen, label: "Notas", href: "/notas" },
-  { icon: Music, label: "Lofi Player", href: "/musica" },
+  { icon: Music, label: "Lofi Player", href: "/lofi" },
 ];
 
 export default function Sidebar() {

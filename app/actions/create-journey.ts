@@ -50,7 +50,9 @@ export async function createJourney(formData: FormData) {
       dbUser = await prisma.user.create({
         data: {
           email: userEmail,
-          name: `${clerkUser.firstName} ${clerkUser.lastName}`,
+          name: `${clerkUser.firstName || "Usuário"} ${
+            clerkUser.lastName || ""
+          }`.trim(),
         },
       });
     }

@@ -2,6 +2,7 @@
 
 import { generateRoadmapContent } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -32,17 +33,25 @@ export async function createJourney(formData: FormData) {
   if (!result.success)
     return { success: false, error: "Dados inválidos. Verifique os campos." };
 
-  //no caso de sucesso, salvo no banco de dados do supabase
-  try {
-    const fakeUserId = "id-temporario-fake-123";
+  const clerkUser = await currentUser();
 
-    let user = await prisma.user.findUnique({
-      where: { email: "dev@solidify.com" },
+  if (!clerkUser || !clerkUser.emailAddresses[0]) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  const userEmail = clerkUser.emailAddresses[0].emailAddress;
+
+  try {
+    let dbUser = await prisma.user.findUnique({
+      where: { email: userEmail },
     });
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: { email: "dev@solidify.com", name: "Dev Sênior", id: fakeUserId },
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
+        data: {
+          email: userEmail,
+          name: `${clerkUser.firstName} ${clerkUser.lastName}`,
+        },
       });
     }
 
@@ -51,7 +60,7 @@ export async function createJourney(formData: FormData) {
         title: result.data.title,
         area: result.data.area,
         description: result.data.details,
-        userId: user.id,
+        userId: dbUser.id,
       },
     });
 
@@ -73,7 +82,7 @@ export async function createJourney(formData: FormData) {
       });
     }
 
-    revalidatePath("/minha-jornada");
+    revalidatePath("/minhas-jornadas");
     return { success: true };
   } catch (error) {
     console.error("Erro ao criar a jornada:", error);

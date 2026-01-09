@@ -69,9 +69,6 @@ export default function LofiPlayer() {
         isExpanded ? "w-[300px]" : "w-[60px]"
       )}
     >
-      {/* TAG DE ÁUDIO INVISÍVEL
-        O 'src' precisa vir do arquivo lofi-stations.ts atualizado.
-      */}
       <audio
         ref={audioRef}
         src={currentStation.streamUrl}
@@ -81,12 +78,10 @@ export default function LofiPlayer() {
       />
 
       <div className="bg-[#161b22]/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl overflow-hidden relative">
-        {/* CABEÇALHO */}
         <div
           className="h-[60px] flex items-center p-3 cursor-pointer hover:bg-white/5 transition-colors"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          {/* Ícone */}
           <div
             className={cn(
               "w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-700",
@@ -100,7 +95,6 @@ export default function LofiPlayer() {
             />
           </div>
 
-          {/* Texto */}
           <div
             className={cn(
               "ml-3 flex flex-col overflow-hidden transition-all duration-300",
@@ -116,7 +110,6 @@ export default function LofiPlayer() {
           </div>
         </div>
 
-        {/* CONTROLES */}
         {isExpanded && (
           <div className="p-4 pt-0 space-y-4 animate-in slide-in-from-bottom-2 duration-300">
             <div className="flex justify-center gap-4">

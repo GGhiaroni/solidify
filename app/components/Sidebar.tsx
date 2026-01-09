@@ -59,11 +59,9 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="mt-auto pt-6 border-t border-white/5 flex flex-col gap-4">
-        {/* Bloco do Usuário */}
+      <div className="mt-8 pt-6 border-t border-white/5 flex flex-col gap-4">
         <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
           <UserButton
-            afterSignOutUrl="/sign-in"
             appearance={{
               elements: {
                 avatarBox: "w-9 h-9 border border-white/10",
@@ -83,10 +81,6 @@ export default function Sidebar() {
             </span>
           </div>
         </div>
-
-        <span className="text-[10px] text-soft/20 text-center font-mono hover:text-soft/40 transition-colors cursor-default">
-          Gabriel Tiziano © 2024
-        </span>
       </div>
     </aside>
   );

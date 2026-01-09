@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import LofiPlayer from "./components/LofiPlayer";
@@ -25,22 +26,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${montserrat.variable} font-sans bg-primary text-light antialiased flex`}
-      >
-        <PomodoroProvider>
-          <LofiProvider>
-            <Sidebar />
-            <main className="flex-1 h-screen overflow-y-auto p-8">
-              {children}
-            </main>
-            <LofiPlayer />
-            <MiniPlayerPomodoro />
-            <ToastProvider />
-          </LofiProvider>
-        </PomodoroProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="pt-BR">
+        <body
+          className={`${montserrat.variable} font-sans bg-primary text-light antialiased flex`}
+        >
+          <PomodoroProvider>
+            <LofiProvider>
+              <Sidebar />
+              <main className="flex-1 h-screen overflow-y-auto p-8">
+                {children}
+              </main>
+              <LofiPlayer />
+              <MiniPlayerPomodoro />
+              <ToastProvider />
+            </LofiProvider>
+          </PomodoroProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

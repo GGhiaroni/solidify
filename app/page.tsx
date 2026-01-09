@@ -1,15 +1,24 @@
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import { RoadmapStatus } from "@prisma/client";
 import { format, subDays } from "date-fns";
 import { BookOpen, Goal, Target, Trophy } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 import { Heatmap } from "./components/Heatmap";
 
 export default async function Dashboard() {
-  //a primeira coisa que vou fazer aqui é buscar o usuário e, posteriormente, incluir os roadmaps e steps
+  const clerkUser = await currentUser();
+
+  if (!clerkUser || !clerkUser.emailAddresses[0]) {
+    redirect("/sign-in");
+  }
+
+  const userEmail = clerkUser.emailAddresses[0].emailAddress;
+
   const user = await prisma.user.findUnique({
-    where: { email: "dev@solidify.com" },
+    where: { email: userEmail },
     include: {
       roadmaps: {
         where: { status: RoadmapStatus.ACTIVE },
@@ -23,7 +32,22 @@ export default async function Dashboard() {
     },
   });
 
-  const sessionsList = user?.sessions || [];
+  let dbUser = user;
+
+  if (!dbUser) {
+    dbUser = await prisma.user.create({
+      data: {
+        email: userEmail,
+        name: clerkUser.firstName + " " + clerkUser.lastName,
+      },
+      include: {
+        roadmaps: { include: { steps: true } },
+        sessions: true,
+      },
+    });
+  }
+
+  const sessionsList = dbUser?.sessions || [];
 
   const sessionsMap = sessionsList.reduce((acc, session) => {
     const date = session.createdAt.toISOString().split("T")[0];
@@ -58,7 +82,7 @@ export default async function Dashboard() {
     };
   });
 
-  const activeRoadmaps = user?.roadmaps || [];
+  const activeRoadmaps = dbUser?.roadmaps || [];
 
   const allStepsArray = activeRoadmaps.flatMap((roadmap) => roadmap.steps);
   const totalStepsCount = allStepsArray.length;

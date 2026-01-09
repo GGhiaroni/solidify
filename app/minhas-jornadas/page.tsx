@@ -1,11 +1,26 @@
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import { ArrowRight, Map } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import CreateJourneyDialog from "../components/CreateJourneyDialog";
 import { StartJourneyButton } from "../components/StartJourneyButton";
 
 export default async function MinhasJornadas() {
+  const user = await currentUser();
+
+  if (!user || !user.emailAddresses[0]) {
+    redirect("/sign-in");
+  }
+
+  const userEmail = user.emailAddresses[0].emailAddress;
+
   const roadmaps = await prisma.roadmap.findMany({
+    where: {
+      user: {
+        email: userEmail,
+      },
+    },
     orderBy: { createdAt: "desc" },
     include: { steps: true },
   });

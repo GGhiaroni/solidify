@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { BarChart3, BookOpen, Home, Map, Music, Timer } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,6 +18,7 @@ const menuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <aside className="w-64 h-screen bg-medium p-6 flex flex-col sticky top-0">
@@ -57,9 +59,33 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="mt-auto pt-6 border-t border-white/5">
-        <span className="text-xs text-soft/40 block text-center hover:text-white transition-colors cursor-default">
-          feito com 🤍 por Gabriel Tiziano.
+      <div className="mt-auto pt-6 border-t border-white/5 flex flex-col gap-4">
+        {/* Bloco do Usuário */}
+        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
+          <UserButton
+            afterSignOutUrl="/sign-in"
+            appearance={{
+              elements: {
+                avatarBox: "w-9 h-9 border border-white/10",
+              },
+            }}
+          />
+
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-sm font-bold text-white truncate">
+              {user?.fullName || "Usuário"}
+            </span>
+            <span
+              className="text-[10px] text-soft/60 truncate"
+              title={user?.primaryEmailAddress?.emailAddress}
+            >
+              {user?.primaryEmailAddress?.emailAddress}
+            </span>
+          </div>
+        </div>
+
+        <span className="text-[10px] text-soft/20 text-center font-mono hover:text-soft/40 transition-colors cursor-default">
+          Gabriel Tiziano © 2024
         </span>
       </div>
     </aside>

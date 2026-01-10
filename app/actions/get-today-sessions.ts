@@ -1,14 +1,23 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function getTodaysessions() {
   try {
-    const user = await prisma.user.findUnique({
-      where: { email: "dev@solidify.com" },
+    const clerkUser = await currentUser();
+
+    if (!clerkUser || !clerkUser.emailAddresses[0]) {
+      return [];
+    }
+
+    const userEmail = clerkUser.emailAddresses[0].emailAddress;
+
+    const dbUser = await prisma.user.findUnique({
+      where: { email: userEmail },
     });
 
-    if (!user) return [];
+    if (!dbUser) return [];
 
     const startOfTheDay = new Date();
     startOfTheDay.setHours(0, 0, 0, 0);
@@ -18,7 +27,7 @@ export default async function getTodaysessions() {
 
     const studyDayLogs = await prisma.studySession.findMany({
       where: {
-        userId: user.id,
+        userId: dbUser.id,
         createdAt: {
           gte: startOfTheDay,
           lte: endOfTheDay,

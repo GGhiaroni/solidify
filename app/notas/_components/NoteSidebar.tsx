@@ -6,6 +6,7 @@ import { FileIcon, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import CreateNoteDialog from "./CreateNoteDialog";
+import NoteItemMenu from "./NoteItemMenu";
 
 interface NoteSidebarProps {
   documents: Note[];
@@ -63,6 +64,8 @@ export default function NoteSidebar({
               className="shrink-0 opacity-50 group-hover:opacity-100 transition"
             />
             <span className="truncate">{note.title}</span>
+
+            <NoteItemMenu documentId={note.id} />
           </Link>
         ))}
       </div>

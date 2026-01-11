@@ -97,7 +97,7 @@ export default function CreateNoteDialog({
               id="roadmap"
               value={selectedRoadmap}
               onChange={(e) => setSelectedRoadmap(e.target.value)}
-              className="flex h-10 w-full rounded-md border border-white/10 bg-medium px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="hover:cursor-pointer flex h-10 w-full rounded-md border border-white/10 bg-medium px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="none">Nenhuma (Anotação solta)</option>
               {userRoadmaps.map((roadmap) => (
@@ -113,14 +113,14 @@ export default function CreateNoteDialog({
           <Button
             variant="ghost"
             onClick={() => setIsOpen(false)}
-            className="text-soft hover:text-white hover:bg-white/10"
+            className="hover:cursor-pointer text-soft hover:text-white hover:bg-white/10"
           >
             Cancelar
           </Button>
           <Button
             onClick={onSubmit}
             disabled={isLoading}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="hover:cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
           >
             {isLoading ? "Criando..." : "Criar Nota"}
           </Button>

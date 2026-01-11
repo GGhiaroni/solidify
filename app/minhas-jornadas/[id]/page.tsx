@@ -1,6 +1,7 @@
 import DeleteJourneyButton from "@/app/components/DeleteJourneyButton";
 import StepItem from "@/app/components/StepItem";
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import { ArrowLeft, BookOpen, Clock } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -13,8 +14,21 @@ interface PageProps {
 export default async function JourneyDetails({ params }: PageProps) {
   const { id } = await params;
 
+  const userClerk = await currentUser();
+
+  if (!userClerk || !userClerk.emailAddresses[0]) {
+    redirect("/sign-in");
+  }
+
+  const userEmail = userClerk.emailAddresses[0].emailAddress;
+
   const roadmap = await prisma.roadmap.findUnique({
-    where: { id },
+    where: {
+      id: id,
+      user: {
+        email: userEmail,
+      },
+    },
     include: {
       steps: {
         orderBy: { order: "asc" },
@@ -34,7 +48,7 @@ export default async function JourneyDetails({ params }: PageProps) {
   return (
     <div className="max-w-4-xl mx-auto space-y-8 animate-in fade-in duration-500 pb-10">
       <Link
-        href="minhas-jornadas"
+        href="/minhas-jornadas"
         className="inline-flex items-center text-soft hover:text-light transition-colors mb-4"
       >
         <ArrowLeft size={16} className="mr-2" />

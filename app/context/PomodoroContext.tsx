@@ -45,9 +45,9 @@ const PomodoroContext = createContext({} as PomodoroContextType);
 export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<TimerMode>("focus");
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(1 * 60);
+  const [time, setTime] = useState(25 * 60);
 
-  const [initialTime, setInitialTime] = useState(1 * 60);
+  const [initialTime, setInitialTime] = useState(25 * 60);
 
   const [todaySessions, setTodaySessions] = useState<Session[]>([]);
 

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-export async function deleteJourney(roadmapId: string) {
+export default async function deleteDocument(documentId: string) {
   const user = await currentUser();
 
   if (!user || !user.emailAddresses[0]) {
@@ -14,9 +14,9 @@ export async function deleteJourney(roadmapId: string) {
   const userEmail = user.emailAddresses[0].emailAddress;
 
   try {
-    const result = await prisma.roadmap.deleteMany({
+    const result = await prisma.document.deleteMany({
       where: {
-        id: roadmapId,
+        id: documentId,
         user: {
           email: userEmail,
         },
@@ -26,13 +26,13 @@ export async function deleteJourney(roadmapId: string) {
     if (result.count === 0) {
       return {
         success: false,
-        error: "Jornada não encontrada ou sem permissão.",
+        error: "Nota não encontrada ou usuário sem permissão.",
       };
     }
-    revalidatePath("/minhas-jornadas");
+    revalidatePath("/notas");
     return { success: true };
   } catch (error) {
-    console.error("Erro ao deletar jornada.", error);
-    return { success: false, error: "Erro ao excluir" };
+    console.error("Erro ao deletar nota.", error);
+    return { success: false, error: "Erro ao deletar nota." };
   }
 }

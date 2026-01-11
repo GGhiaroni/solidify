@@ -42,12 +42,11 @@ export default function NoteItemMenu({ documentId }: NoteItemMenuProps) {
 
   return (
     <DropdownMenu>
-      {/* O Trigger é o botão que abre o menu */}
       <DropdownMenuTrigger asChild>
         <div
           role="button"
           className="h-full rounded-sm hover:bg-white/10 p-1 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={(e) => e.stopPropagation()} // Impede que clique no menu e abra a nota ao mesmo tempo
+          onClick={(e) => e.stopPropagation()}
         >
           <MoreHorizontal size={14} className="text-soft" />
         </div>

@@ -6,7 +6,7 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
 
-interface NoteEditorProps {
+interface EditorProps {
   onChange?: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
@@ -16,7 +16,7 @@ export default function NoteEditor({
   onChange,
   initialContent,
   editable = true,
-}: NoteEditorProps) {
+}: EditorProps) {
   const editor = useCreateBlockNote({
     initialContent: initialContent
       ? (JSON.parse(initialContent) as PartialBlock[])
@@ -24,12 +24,13 @@ export default function NoteEditor({
   });
 
   return (
-    <div className="-mx-[54px] my-4 bg-transparent">
+    <div className="editor-wrapper w-full max-w-full">
       <BlockNoteView
         editor={editor}
         editable={editable}
         theme="dark"
         onChange={() => {}}
+        className="min-h-[80vh] pb-20 cursor-text"
       />
     </div>
   );

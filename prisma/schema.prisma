@@ -13,6 +13,7 @@ model User {
   name      String?
   roadmaps  Roadmap[]
   sessions  StudySession[]
+  documents Document[]
 }
 
 enum RoadmapStatus {
@@ -33,6 +34,7 @@ model Roadmap {
   createdAt   DateTime @default(now())
   updatedAt DateTime @updatedAt
   status RoadmapStatus @default(DRAFT)
+  documents Document[]
 }
 
 
@@ -54,4 +56,24 @@ model StudySession {
   duration  Int      // Minutos focados
   name String?
   createdAt DateTime @default(now())
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  userId      String
+  isArchived  Boolean  @default(false)
+  content     String?  @db.Text
+  icon        String?
+  coverImage  String?
+  parentDocumentId String?
+  parentDocument   Document?  @relation("ParentChild", fields: [parentDocumentId], references: [id], onDelete: Cascade)
+  childDocuments   Document[] @relation("ParentChild")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roadmapId   String?
+  roadmap     Roadmap? @relation(fields: [roadmapId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([userId])
+  @@index([userId, parentDocumentId])
 }

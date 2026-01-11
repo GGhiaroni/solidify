@@ -120,7 +120,7 @@ export default function LofiPlayer() {
                   e.stopPropagation();
                   togglePlay();
                 }}
-                className="h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white"
+                className="hover:cursor-pointer h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white"
               >
                 {isPlaying ? (
                   <Pause fill="currentColor" />
@@ -132,7 +132,7 @@ export default function LofiPlayer() {
                 variant="ghost"
                 size="icon"
                 onClick={handleNextStation}
-                className="h-12 w-12 rounded-full hover:bg-white/10 text-soft"
+                className="hover:cursor-pointer h-12 w-12 rounded-full hover:bg-white/10 text-soft"
               >
                 <SkipForward size={20} />
               </Button>
@@ -162,7 +162,7 @@ export default function LofiPlayer() {
                   key={s.id}
                   onClick={() => changeStation(s.id)}
                   className={cn(
-                    "text-xs p-2 rounded-lg text-left transition-colors truncate",
+                    "hover:cursor-pointer text-xs p-2 rounded-lg text-left transition-colors truncate",
                     currentStation.id === s.id
                       ? "bg-white/10 text-blue-400 font-bold"
                       : "text-soft hover:text-white hover:bg-white/5"

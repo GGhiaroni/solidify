@@ -1,37 +1,22 @@
 "use client";
 
-import { createDocument } from "@/app/actions/create-document";
 import { cn } from "@/lib/utils";
-import { Document as Note } from "@prisma/client";
+import { Document as Note, Roadmap } from "@prisma/client";
 import { FileIcon, Plus } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { usePathname } from "next/navigation";
+import CreateNoteDialog from "./CreateNoteDialog";
 
 interface NoteSidebarProps {
   documents: Note[];
+  userRoadmaps: Roadmap[];
 }
 
-export default function NoteSidebar({ documents }: NoteSidebarProps) {
+export default function NoteSidebar({
+  documents,
+  userRoadmaps,
+}: NoteSidebarProps) {
   const pathName = usePathname();
-  const router = useRouter();
-
-  const onCreate = async () => {
-    const promise = createDocument().then((response) => {
-      if (response.success && response.documentId) {
-        router.push(`/notas/${response.documentId}`);
-        return "Nota criada com sucesso!";
-      } else {
-        throw new Error("Erro ao criar nota.");
-      }
-    });
-
-    toast.promise(promise, {
-      pending: "Criando nova nota...",
-      success: "Nota criada!",
-      error: "Erro ao criar nota.",
-    });
-  };
 
   return (
     <aside className="group/sidebar h-full bg-medium/50 overflow-y-auto relative w-60 flex flex-col z-[99999] border-r border-white/5">
@@ -40,23 +25,21 @@ export default function NoteSidebar({ documents }: NoteSidebarProps) {
           <h2 className="text-sm font-bold text-soft uppercase tracking-wider">
             Seus Cadernos
           </h2>
-          <button
-            onClick={onCreate}
-            className="text-soft hover:text-white hover:bg-white/10 p-1 rounded-sm transition"
-          >
-            <Plus size={16} />
-          </button>
+          <CreateNoteDialog userRoadmaps={userRoadmaps}>
+            <button className="hover:cursor-pointer text-soft hover:text-white hover:bg-white/10 p-1 rounded-sm transition">
+              <Plus size={16} />
+            </button>
+          </CreateNoteDialog>
         </div>
 
-        <button
-          onClick={onCreate}
-          className="w-full flex items-center gap-2 text-sm text-soft hover:text-white hover:bg-white/5 p-2 rounded-lg transition-colors group mb-4 border border-dashed border-white/10 hover:border-white/20"
-        >
-          <div className="bg-blue-500/10 p-1 rounded-md group-hover:bg-blue-500/20 transition">
-            <Plus size={14} className="text-blue-500" />
-          </div>
-          <span className="font-medium">Nova Página</span>
-        </button>
+        <CreateNoteDialog userRoadmaps={userRoadmaps}>
+          <button className="hover:cursor-pointer w-full flex items-center gap-2 text-sm text-soft hover:text-white hover:bg-white/5 p-2 rounded-lg transition-colors group mb-4 border border-dashed border-white/10 hover:border-white/20">
+            <div className="bg-blue-500/10 p-1 rounded-md group-hover:bg-blue-500/20 transition">
+              <Plus size={14} className="text-blue-500" />
+            </div>
+            <span className="font-medium">Nova Página</span>
+          </button>
+        </CreateNoteDialog>
       </div>
 
       <div className="flex flex-col px-2 pb-4 space-y-1">

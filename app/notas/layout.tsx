@@ -35,9 +35,18 @@ export default async function NotesLayout({
     },
   });
 
+  const roadmaps = await prisma.roadmap.findMany({
+    where: {
+      userId: dbUser.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <div className="h-full flex dark:bg-[#1F1F1F]">
-      <NoteSidebar documents={documents} />
+      <NoteSidebar documents={documents} userRoadmaps={roadmaps} />
       <main className="flex-1 h-full overflow-y-auto">{children}</main>
     </div>
   );

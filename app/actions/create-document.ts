@@ -4,7 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-export async function createDocument(parentDocumentId?: string) {
+export async function createDocument(
+  title: string,
+  roadmapId?: string,
+  parentDocumentId?: string
+) {
   try {
     const clerkUser = await currentUser();
 
@@ -26,10 +30,11 @@ export async function createDocument(parentDocumentId?: string) {
 
     const document = await prisma.document.create({
       data: {
-        title: "Sem título",
+        title: title || "Nota sem título",
         userId: dbUser.id,
         parentDocumentId: parentDocumentId || null,
         isArchived: false,
+        roadmapId: roadmapId && roadmapId !== "none" ? roadmapId : null,
       },
     });
 

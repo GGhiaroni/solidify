@@ -11,6 +11,7 @@
   --color-medium: #1C4D8D;
   --color-soft: #4988C4;
   --color-light: #BDE8F5;
+  --font-serif: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 :root {
@@ -408,4 +409,32 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.bn-inline-content {
+  color: #E2E8F0 !important;
+  font-family: var(--font-sans) !important; 
+  font-size: 1.05rem !important; 
+  line-height: 1.75 !important; 
+  font-weight: 400 !important;
+}
+
+
+.bn-block-content[data-content-type="heading"] .bn-inline-content {
+  font-family: var(--font-serif) !important;
+  font-weight: 600 !important;
+}
+
+
+.bn-block-content[data-is-empty-and-focused] .bn-inline-content::before,
+.bn-block-content[data-is-empty] .bn-inline-content::before {
+  color: rgba(255, 255, 255, 0.2) !important;
+  content: "Pressione '/' para comandos..." !important;
+  font-style: italic !important;
+  font-family: var(--font-serif) !important; 
+  font-size: 1rem !important;
 }

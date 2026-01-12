@@ -26,21 +26,37 @@ export default function NoteEditor({
 
   useEffect(() => {
     if (editor && editable) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         editor.focus();
       }, 100);
+      return () => clearTimeout(timeout);
     }
   }, [editor, editable]);
 
+  if (!editor) return null;
+
   return (
-    <div className="editor-wrapper w-full max-w-full">
-      <BlockNoteView
-        editor={editor}
-        editable={editable}
-        theme="dark"
-        onChange={() => {}}
-        className="min-h-[80vh] pb-20 cursor-text"
-      />
+    <div className="w-full max-w-full ml-4 pl-4">
+      <div
+        className="
+          min-h-[70vh] 
+          w-full 
+          /* 👇 REMOVIDO: Bordas, cores de fundo e efeitos de hover. */
+          /* O Notion é limpo, apenas o texto importa. */
+          cursor-text
+        "
+        onClick={() => editor.focus()}
+      >
+        <BlockNoteView
+          editor={editor}
+          editable={editable}
+          theme="dark"
+          onChange={() => {
+            // onChange logic
+          }}
+          className="min-h-full w-full"
+        />
+      </div>
     </div>
   );
 }

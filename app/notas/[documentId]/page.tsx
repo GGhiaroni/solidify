@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import EditorWrapper from "../_components/NoteEditorWrapper";
+import NoteEditor from "../_components/NoteEditor";
 
 interface NotePageProps {
   params: Promise<{ documentId: string }>;
@@ -34,15 +34,21 @@ export default async function NotePage({ params }: NotePageProps) {
   }
 
   return (
-    <div className="min-h-full">
-      <div className="md:max-w-3xl lg:max-w-4xl px-10 pt-10">
-        <div className="text-5xl font-bold text-white mb-4 break-words outline-none">
-          {result.title}
+    <div className="min-h-full px-10 dark:bg-[#0F1117]">
+      <div className="w-full max-w-5xl px-12 pt-16 pb-20">
+        <div className="group mb-8">
+          <h1 className="text-5xl font-bold text-white mb-4 outline-none font-serif tracking-tight">
+            {result.title}
+          </h1>
+
+          <div className="flex items-center gap-4 text-xs text-soft/40 font-medium">
+            <span>Editado por você hoje</span>
+            <span className="w-1 h-1 rounded-full bg-soft/20" />
+            <span>2 min de leitura</span>
+          </div>
         </div>
-
-        <div className="text-sm text-soft/40 mb-8">Editado recentemente</div>
-
-        <EditorWrapper initialContent={result.content || undefined} />
+        <div className="h-[1px] w-full bg-white/5 mb-8" />
+        <NoteEditor initialContent={result.content || undefined} />
       </div>
     </div>
   );

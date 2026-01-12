@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Lora, Montserrat } from "next/font/google";
 import LofiPlayer from "./components/LofiPlayer";
 import MiniPlayerPomodoro from "./components/MiniPlayerPomodoro";
 import Sidebar from "./components/Sidebar";
@@ -13,6 +13,12 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-montserrat",
+});
+
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +35,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="pt-BR" suppressHydrationWarning>
         <body
-          className={`${montserrat.variable} font-sans bg-primary text-light antialiased flex`}
+          className={`${montserrat.variable} ${lora.variable} font-sans bg-primary text-light antialiased flex`}
         >
           <PomodoroProvider>
             <LofiProvider>

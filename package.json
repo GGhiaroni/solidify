@@ -35,6 +35,9 @@
     "tailwind-merge": "^3.4.0",
     "zod": "^4.2.1"
   },
+  "overrides": {
+    "yjs": "13.6.10"
+  },
   "devDependencies": {
     "@prisma/client": "^6.19.1",
     "@tailwindcss/postcss": "^4",

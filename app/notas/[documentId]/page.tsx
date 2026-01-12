@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import NoteEditor from "../_components/NoteEditor";
+import EditorWrapper from "../_components/NoteEditorWrapper";
 
 interface NotePageProps {
   params: Promise<{ documentId: string }>;
@@ -48,9 +48,9 @@ export default async function NotePage({ params }: NotePageProps) {
           </div>
         </div>
         <div className="h-[1px] w-full bg-white/5 mb-8" />
-        <NoteEditor
-          documentId={result.id}
+        <EditorWrapper
           initialContent={result.content || undefined}
+          documentId={result.id}
         />
       </div>
     </div>

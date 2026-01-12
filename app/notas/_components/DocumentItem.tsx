@@ -76,7 +76,7 @@ export const DocumentItem = ({
         <div
           role="button"
           onClick={handleExpand}
-          className="h-full rounded-sm hover:bg-white/10 mr-1 transition p-0.5 z-10" // Adicionei z-10 por garantia
+          className="h-full rounded-sm hover:bg-white/10 mr-1 transition p-0.5 z-10"
         >
           {isExpanded ? (
             <ChevronDown className="h-4 w-4 shrink-0 text-soft/50" />

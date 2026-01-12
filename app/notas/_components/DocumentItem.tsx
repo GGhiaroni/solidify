@@ -31,12 +31,14 @@ export const DocumentItem = ({
 
   const handleExpand = (event: React.MouseEvent) => {
     event.stopPropagation();
+    event.preventDefault();
     setIsExpanded((prev) => !prev);
     onExpand?.();
   };
 
   const onCreateChild = (event: React.MouseEvent) => {
     event.stopPropagation();
+    event.preventDefault();
 
     if (!document.id) return;
 

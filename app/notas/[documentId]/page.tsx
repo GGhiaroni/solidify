@@ -48,7 +48,10 @@ export default async function NotePage({ params }: NotePageProps) {
           </div>
         </div>
         <div className="h-[1px] w-full bg-white/5 mb-8" />
-        <NoteEditor initialContent={result.content || undefined} />
+        <NoteEditor
+          documentId={result.id}
+          initialContent={result.content || undefined}
+        />
       </div>
     </div>
   );

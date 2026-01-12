@@ -28,7 +28,15 @@ export default async function NotesLayout({
   const documents = await prisma.document.findMany({
     where: {
       userId: dbUser.id,
+      parentDocumentId: null,
       isArchived: false,
+    },
+    include: {
+      childDocuments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

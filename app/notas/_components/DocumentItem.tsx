@@ -1,13 +1,16 @@
 "use client";
 
+import { createDocument } from "@/app/actions/create-document"; // Sua server action
 import { cn } from "@/lib/utils";
 import { Document } from "@prisma/client";
 import { ChevronRight, FileText, Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import NoteItemMenu from "./NoteItemMenu"; // Importando seu menu existente
+import { toast } from "react-toastify";
+import NoteItemMenu from "./NoteItemMenu"; // Seu menu existente
 
+// Define que o documento pode ter filhos
 type DocumentWithChildren = Document & { childDocuments?: Document[] };
 
 interface DocumentItemProps {
@@ -33,11 +36,30 @@ export const DocumentItem = ({
     onExpand?.();
   };
 
+  // Função para criar nota filha usando sua Server Action atual
   const onCreateChild = (event: React.MouseEvent) => {
     event.stopPropagation();
-    // Aqui implementaremos a criação de nota filha na próxima etapa
-    // Por enquanto, apenas expande para mostrar que funcionou
-    if (!isExpanded) setIsExpanded(true);
+
+    if (!document.id) return;
+
+    const promise = createDocument({
+      title: "Sem título",
+      parentDocumentId: document.id, // Passa o ID do pai
+    }).then((response) => {
+      // 👇 Aqui está a correção: usamos 'documentId' conforme sua action retorna
+      if (response.success && response.documentId) {
+        if (!isExpanded) setIsExpanded(true);
+        router.push(`/notas/${response.documentId}`);
+      } else {
+        throw new Error("Erro ao criar nota.");
+      }
+    });
+
+    toast.promise(promise, {
+      pending: "Criando nova nota...",
+      success: "Nova nota criada!",
+      error: "Erro ao criar nota.",
+    });
   };
 
   const active = params?.documentId === document.id;
@@ -52,7 +74,7 @@ export const DocumentItem = ({
         )}
         style={{ paddingLeft: level ? `${level * 12 + 12}px` : "12px" }}
       >
-        {/* Botão de Expandir/Recolher */}
+        {/* Seta de Expandir */}
         <div
           role="button"
           onClick={handleExpand}
@@ -66,7 +88,7 @@ export const DocumentItem = ({
           />
         </div>
 
-        {/* Ícone (Emoji ou Padrão) */}
+        {/* Ícone */}
         {document.icon ? (
           <span className="shrink-0 mr-2 text-[18px]">{document.icon}</span>
         ) : (
@@ -76,9 +98,9 @@ export const DocumentItem = ({
         {/* Título */}
         <span className="truncate">{document.title}</span>
 
-        {/* Ações (Só aparecem no Hover) */}
+        {/* Ações (Aparecem no Hover) */}
         <div className="flex items-center ml-auto opacity-0 group-hover:opacity-100 transition gap-x-1">
-          {/* Botão Criar Filho (+): Vamos ativar na Etapa 2 */}
+          {/* Botão + (Cria filho) */}
           <div
             role="button"
             onClick={onCreateChild}
@@ -87,19 +109,21 @@ export const DocumentItem = ({
             <Plus className="h-4 w-4" />
           </div>
 
-          {/* Menu de Opções (Deletar, etc) */}
+          {/* Seu Menu Existente (Deletar/Arquivar) */}
           <NoteItemMenu documentId={document.id} />
         </div>
       </Link>
 
-      {/* Renderização Recursiva dos Filhos */}
+      {/* Renderiza os filhos recursivamente */}
       {isExpanded && (
         <div className="flex flex-col">
           {document.childDocuments?.map((child) => (
-            <DocumentItem key={child.id} document={child} level={level + 1} />
+            <DocumentItem
+              key={child.id}
+              document={child} // O TS infere que é Document
+              level={level + 1}
+            />
           ))}
-
-          {/* Mensagem se não houver filhos (opcional, estilo Notion) */}
           {document.childDocuments?.length === 0 && (
             <p
               style={{
@@ -107,7 +131,7 @@ export const DocumentItem = ({
               }}
               className="text-xs text-soft/30 py-1"
             >
-              Nenhuma página dentro
+              Vazio
             </p>
           )}
         </div>

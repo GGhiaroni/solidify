@@ -4,11 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-export async function createDocument(
-  title: string,
-  roadmapId?: string,
-  parentDocumentId?: string
-) {
+interface CreateDocumentProps {
+  title?: string;
+  parentDocumentId?: string;
+  roadmapId?: string;
+}
+
+export async function createDocument({
+  title,
+  roadmapId,
+  parentDocumentId,
+}: CreateDocumentProps) {
   try {
     const clerkUser = await currentUser();
 

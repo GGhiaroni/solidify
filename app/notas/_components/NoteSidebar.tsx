@@ -1,12 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { Document as Note, Roadmap } from "@prisma/client";
-import { FileIcon, Plus } from "lucide-react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
 import CreateNoteDialog from "./CreateNoteDialog";
-import NoteItemMenu from "./NoteItemMenu";
+import { DocumentItem } from "./DocumentItem";
 
 interface NoteSidebarProps {
   documents: Note[];
@@ -50,23 +48,8 @@ export default function NoteSidebar({
           </div>
         )}
 
-        {documents.map((note) => (
-          <Link
-            key={note.id}
-            href={`/notas/${note.id}`}
-            className={cn(
-              "group min-h-[32px] text-sm py-1 pr-3 w-full hover:bg-white/5 flex items-center text-soft font-medium rounded-lg px-2 gap-2 transition-colors",
-              pathName === `/notas/${note.id}` && "bg-blue-500/10 text-blue-400"
-            )}
-          >
-            <FileIcon
-              size={16}
-              className="shrink-0 opacity-50 group-hover:opacity-100 transition"
-            />
-            <span className="truncate">{note.title}</span>
-
-            <NoteItemMenu documentId={note.id} />
-          </Link>
+        {documents.map((doc) => (
+          <DocumentItem key={doc.id} document={doc} />
         ))}
       </div>
     </aside>

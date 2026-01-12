@@ -35,7 +35,7 @@ export default async function NotePage({ params }: NotePageProps) {
 
   return (
     <div className="min-h-full px-10 dark:bg-[#0F1117]">
-      <div className="w-full max-w-5xl px-12 pt-16 pb-20">
+      <div className="w-full max-w-6xl px-12 pt-16 pb-20">
         <div className="group mb-8">
           <h1 className="text-5xl font-bold text-white mb-4 outline-none font-serif tracking-tight">
             {result.title}
@@ -47,7 +47,7 @@ export default async function NotePage({ params }: NotePageProps) {
             <span>2 min de leitura</span>
           </div>
         </div>
-        <div className="h-[1px] w-full bg-white/5 mb-8" />
+        <div className="h-[1px] w-full bg-white/5 mb-4" />
         <EditorWrapper
           initialContent={result.content || undefined}
           documentId={result.id}

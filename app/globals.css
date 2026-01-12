@@ -438,3 +438,27 @@
   font-family: var(--font-serif) !important; 
   font-size: 1rem !important;
 }
+
+.bn-editor {
+  
+  padding-inline: 10px !important; 
+  
+  max-width: 100% !important;
+  
+  padding-top: 2rem !important; 
+}
+
+
+.bn-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+
+
+.editor-wrapper {
+  background-color: #1a1b1e; 
+  border-radius: 8px;
+  width: 100%;
+}

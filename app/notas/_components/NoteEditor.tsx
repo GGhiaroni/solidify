@@ -67,7 +67,7 @@ export default function NoteEditor({
   if (!editor) return null;
 
   return (
-    <div className="w-full max-w-full ml-4 pl-4 relative group">
+    <div className="w-full relative group">
       <div
         className="min-h-[70vh] w-full cursor-text"
         onClick={() => editor.focus()}

@@ -3,7 +3,7 @@
 import { createDocument } from "@/app/actions/create-document";
 import { cn } from "@/lib/utils";
 import { Document } from "@prisma/client";
-import { ChevronRight, FileText, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, FileText, Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -76,14 +76,13 @@ export const DocumentItem = ({
         <div
           role="button"
           onClick={handleExpand}
-          className="h-full rounded-sm hover:bg-white/10 mr-1 transition p-0.5"
+          className="h-full rounded-sm hover:bg-white/10 mr-1 transition p-0.5 z-10" // Adicionei z-10 por garantia
         >
-          <ChevronRight
-            className={cn(
-              "h-4 w-4 shrink-0 text-soft/50 transition-transform duration-200",
-              isExpanded && "rotate-90"
-            )}
-          />
+          {isExpanded ? (
+            <ChevronDown className="h-4 w-4 shrink-0 text-soft/50" />
+          ) : (
+            <ChevronRight className="h-4 w-4 shrink-0 text-soft/50" />
+          )}
         </div>
 
         {document.icon ? (
@@ -112,7 +111,8 @@ export const DocumentItem = ({
           {document.childDocuments?.map((child) => (
             <DocumentItem key={child.id} document={child} level={level + 1} />
           ))}
-          {document.childDocuments?.length === 0 && (
+          {/* Só mostra "Vazio" se o array existir E tiver tamanho 0 */}
+          {document.childDocuments && document.childDocuments.length === 0 && (
             <p
               style={{
                 paddingLeft: level ? `${(level + 1) * 12 + 24}px` : "24px",

@@ -16,7 +16,7 @@ export async function updateDocumentContent(
   const userEmail = clerkUser?.emailAddresses[0].emailAddress;
 
   try {
-    await prisma.document.updateMany({
+    const result = await prisma.document.updateMany({
       where: {
         id: documentId,
         user: {
@@ -27,6 +27,13 @@ export async function updateDocumentContent(
         content: content,
       },
     });
+
+    if (result.count === 0) {
+      return {
+        success: false,
+        error: "Nota não encontrada ou permissão negada.",
+      };
+    }
 
     return { success: true };
   } catch (error) {

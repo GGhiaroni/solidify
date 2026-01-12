@@ -1,6 +1,6 @@
 "use client";
 
-import { createDocument } from "@/app/actions/create-document"; // Sua server action
+import { createDocument } from "@/app/actions/create-document";
 import { cn } from "@/lib/utils";
 import { Document } from "@prisma/client";
 import { ChevronRight, FileText, Plus } from "lucide-react";
@@ -8,9 +8,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import NoteItemMenu from "./NoteItemMenu"; // Seu menu existente
+import NoteItemMenu from "./NoteItemMenu";
 
-// Define que o documento pode ter filhos
 type DocumentWithChildren = Document & { childDocuments?: Document[] };
 
 interface DocumentItemProps {
@@ -36,7 +35,6 @@ export const DocumentItem = ({
     onExpand?.();
   };
 
-  // Função para criar nota filha usando sua Server Action atual
   const onCreateChild = (event: React.MouseEvent) => {
     event.stopPropagation();
 
@@ -44,9 +42,8 @@ export const DocumentItem = ({
 
     const promise = createDocument({
       title: "Sem título",
-      parentDocumentId: document.id, // Passa o ID do pai
+      parentDocumentId: document.id,
     }).then((response) => {
-      // 👇 Aqui está a correção: usamos 'documentId' conforme sua action retorna
       if (response.success && response.documentId) {
         if (!isExpanded) setIsExpanded(true);
         router.push(`/notas/${response.documentId}`);
@@ -74,7 +71,6 @@ export const DocumentItem = ({
         )}
         style={{ paddingLeft: level ? `${level * 12 + 12}px` : "12px" }}
       >
-        {/* Seta de Expandir */}
         <div
           role="button"
           onClick={handleExpand}
@@ -88,19 +84,15 @@ export const DocumentItem = ({
           />
         </div>
 
-        {/* Ícone */}
         {document.icon ? (
           <span className="shrink-0 mr-2 text-[18px]">{document.icon}</span>
         ) : (
           <FileText className="shrink-0 h-[18px] w-[18px] mr-2 text-soft/50" />
         )}
 
-        {/* Título */}
         <span className="truncate">{document.title}</span>
 
-        {/* Ações (Aparecem no Hover) */}
         <div className="flex items-center ml-auto opacity-0 group-hover:opacity-100 transition gap-x-1">
-          {/* Botão + (Cria filho) */}
           <div
             role="button"
             onClick={onCreateChild}
@@ -109,20 +101,14 @@ export const DocumentItem = ({
             <Plus className="h-4 w-4" />
           </div>
 
-          {/* Seu Menu Existente (Deletar/Arquivar) */}
           <NoteItemMenu documentId={document.id} />
         </div>
       </Link>
 
-      {/* Renderiza os filhos recursivamente */}
       {isExpanded && (
         <div className="flex flex-col">
           {document.childDocuments?.map((child) => (
-            <DocumentItem
-              key={child.id}
-              document={child} // O TS infere que é Document
-              level={level + 1}
-            />
+            <DocumentItem key={child.id} document={child} level={level + 1} />
           ))}
           {document.childDocuments?.length === 0 && (
             <p

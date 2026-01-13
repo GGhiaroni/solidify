@@ -125,7 +125,7 @@ export default function CreateDocumentDialog({
             disabled={isLoading}
             className="hover:cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
           >
-            {isLoading ? "Criando..." : "Criar Nota"}
+            {isLoading ? "Criando..." : "Criar caderno"}
           </Button>
         </DialogFooter>
       </DialogContent>

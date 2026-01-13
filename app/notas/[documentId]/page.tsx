@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 // Imports dos seus componentes
+import { Cover } from "../_components/Cover";
 import { DocumentTitle } from "../_components/DocumentTitle";
 import EditorWrapper from "../_components/NoteEditorWrapper";
 import { Toolbar } from "../_components/Toolbar";
@@ -29,6 +30,7 @@ export default async function NotePage({ params }: NotePageProps) {
 
   return (
     <div className="min-h-full px-10 dark:bg-[#0F1117]">
+      <Cover url={result.coverImage} />
       <div className="w-full max-w-6xl px-12 pt-16 pb-20">
         <div className="group mb-8">
           <Toolbar initialData={result} />

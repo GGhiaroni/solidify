@@ -24,6 +24,13 @@ export const Toolbar = ({ initialData }: ToolbarProps) => {
     updateDocument(initialData.id, { icon: null });
   };
 
+  const onEnableCover = () => {
+    const defaultCoverUrl = "bg-neutral-800";
+
+    setData({ ...data, coverImage: defaultCoverUrl });
+    updateDocument(initialData.id, { coverImage: defaultCoverUrl });
+  };
+
   return (
     <div className="relative group/toolbar mb-4">
       <div className="opacity-0 group-hover/toolbar:opacity-100 flex items-center gap-x-1 py-4 transition duration-200">
@@ -34,8 +41,12 @@ export const Toolbar = ({ initialData }: ToolbarProps) => {
             </button>
           </IconPicker>
         )}
-        {!data.coverImage && (
-          <button className="text-muted-foreground text-xs hover:bg-white/10 p-2 rounded transition text-soft/50 hover:text-soft">
+
+        {!initialData.coverImage && !data.coverImage && (
+          <button
+            onClick={onEnableCover}
+            className="text-muted-foreground text-xs hover:bg-white/10 p-2 rounded transition text-soft/50 hover:text-soft"
+          >
             🖼️ Adicionar capa
           </button>
         )}

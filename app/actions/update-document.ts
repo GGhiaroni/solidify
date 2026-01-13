@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 interface UpdateDocumentDataProps {
   icon?: string | null;
   title?: string;
-  coverImage?: string;
+  coverImage?: string | null;
   isArchived?: boolean;
 }
 

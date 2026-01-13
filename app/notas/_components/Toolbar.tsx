@@ -36,7 +36,7 @@ export const Toolbar = ({ initialData }: ToolbarProps) => {
       <div className="opacity-0 group-hover/toolbar:opacity-100 flex items-center gap-x-1 py-4 transition duration-200">
         {!data.icon && (
           <IconPicker onChange={onIconSelect} asChild>
-            <button className="text-muted-foreground text-xs hover:bg-white/10 p-2 rounded transition text-soft/50 hover:text-soft">
+            <button className="hover:cursor-pointer text-muted-foreground text-xs hover:bg-white/10 p-2 rounded transition text-soft/50 hover:text-soft">
               😀 Adicionar ícone
             </button>
           </IconPicker>
@@ -45,7 +45,7 @@ export const Toolbar = ({ initialData }: ToolbarProps) => {
         {!initialData.coverImage && !data.coverImage && (
           <button
             onClick={onEnableCover}
-            className="text-muted-foreground text-xs hover:bg-white/10 p-2 rounded transition text-soft/50 hover:text-soft"
+            className="hover:cursor-pointer text-muted-foreground text-xs hover:bg-white/10 p-2 rounded transition text-soft/50 hover:text-soft"
           >
             🖼️ Adicionar capa
           </button>
@@ -62,7 +62,7 @@ export const Toolbar = ({ initialData }: ToolbarProps) => {
 
           <button
             onClick={onRemoveIcon}
-            className="opacity-0 group-hover/icon:opacity-100 rounded-full bg-neutral-500/20 hover:bg-neutral-500/40 p-1 transition text-neutral-400"
+            className="hover: cursor-pointer opacity-0 group-hover/icon:opacity-100 rounded-full bg-neutral-500/20 hover:bg-neutral-500/40 p-1 transition text-neutral-400"
           >
             <X className="h-3 w-3" />
           </button>

@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-// Imports dos seus componentes
 import { Cover } from "../_components/Cover";
 import { DocumentTitle } from "../_components/DocumentTitle";
 import EditorWrapper from "../_components/NoteEditorWrapper";

@@ -1,3 +1,4 @@
+import { EdgeStoreProvider } from "@/lib/edgestore";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Lora, Montserrat } from "next/font/google";
@@ -37,17 +38,19 @@ export default function RootLayout({
         <body
           className={`${montserrat.variable} ${lora.variable} font-sans bg-primary text-light antialiased flex`}
         >
-          <PomodoroProvider>
-            <LofiProvider>
-              <Sidebar />
-              <main className="flex-1 h-screen overflow-y-auto p-8">
-                {children}
-              </main>
-              <LofiPlayer />
-              <MiniPlayerPomodoro />
-              <ToastProvider />
-            </LofiProvider>
-          </PomodoroProvider>
+          <EdgeStoreProvider>
+            <PomodoroProvider>
+              <LofiProvider>
+                <Sidebar />
+                <main className="flex-1 h-screen overflow-y-auto p-8">
+                  {children}
+                </main>
+                <LofiPlayer />
+                <MiniPlayerPomodoro />
+                <ToastProvider />
+              </LofiProvider>
+            </PomodoroProvider>
+          </EdgeStoreProvider>
         </body>
       </html>
     </ClerkProvider>

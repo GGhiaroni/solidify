@@ -1,6 +1,7 @@
 "use client";
 
 import { createDocument } from "@/app/actions/create-document";
+import updateDocument from "@/app/actions/update-document";
 import { cn } from "@/lib/utils";
 import { Document } from "@prisma/client";
 import { ChevronDown, ChevronRight, FileText, Plus } from "lucide-react";
@@ -8,6 +9,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { IconPicker } from "./IconPicker";
 import NoteItemMenu from "./NoteItemMenu";
 
 type DocumentWithChildren = Document & { childDocuments?: Document[] };
@@ -61,6 +63,10 @@ export const DocumentItem = ({
     });
   };
 
+  const onIconSelect = (icon: string) => {
+    updateDocument(document.id, { icon });
+  };
+
   const active = params?.documentId === document.id;
 
   return (
@@ -85,11 +91,23 @@ export const DocumentItem = ({
           )}
         </div>
 
-        {document.icon ? (
-          <span className="shrink-0 mr-2 text-[18px]">{document.icon}</span>
-        ) : (
-          <FileText className="shrink-0 h-[18px] w-[18px] mr-2 text-soft/50" />
-        )}
+        <div
+          className="shrink-0 mr-2 z-20"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
+          <IconPicker asChild onChange={onIconSelect}>
+            <div className="hover:bg-white/10 rounded-sm p-0.5 transition cursor-pointer h-[20px] w-[20px] flex items-center justify-center">
+              {document.icon ? (
+                <span className="text-[16px]">{document.icon}</span>
+              ) : (
+                <FileText className="h-[16px] w-[16px] text-soft/50" />
+              )}
+            </div>
+          </IconPicker>
+        </div>
 
         <span className="truncate">{document.title}</span>
 

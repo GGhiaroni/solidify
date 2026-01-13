@@ -1,9 +1,10 @@
 "use client";
 
 import updateDocument from "@/app/actions/update-document";
+import { getRandomCover } from "@/lib/constants";
 import { Document } from "@prisma/client";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IconPicker } from "./IconPicker";
 
 interface ToolbarProps {
@@ -12,6 +13,10 @@ interface ToolbarProps {
 
 export const Toolbar = ({ initialData }: ToolbarProps) => {
   const [data, setData] = useState(initialData);
+
+  useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
 
   const onIconSelect = (icon: string) => {
     setData({ ...data, icon });
@@ -25,10 +30,10 @@ export const Toolbar = ({ initialData }: ToolbarProps) => {
   };
 
   const onEnableCover = () => {
-    const defaultCoverUrl = "bg-neutral-800";
+    const randomImage = getRandomCover();
 
-    setData({ ...data, coverImage: defaultCoverUrl });
-    updateDocument(initialData.id, { coverImage: defaultCoverUrl });
+    setData({ ...data, coverImage: randomImage });
+    updateDocument(initialData.id, { coverImage: randomImage });
   };
 
   return (

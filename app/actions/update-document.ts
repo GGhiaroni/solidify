@@ -5,7 +5,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 interface UpdateDocumentDataProps {
-  icon?: string;
+  icon?: string | null;
   title?: string;
   coverImage?: string;
   isArchived?: boolean;

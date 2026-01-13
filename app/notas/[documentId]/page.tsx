@@ -30,7 +30,7 @@ export default async function NotePage({ params }: NotePageProps) {
   return (
     <div className="min-h-full px-10 dark:bg-[#0F1117]">
       <Cover url={result.coverImage} />
-      <div className="w-full max-w-6xl px-12 pt-16 pb-20">
+      <div className="w-full max-w-6xl px-12 pt-6 pb-6">
         <div className="group mb-8">
           <Toolbar initialData={result} />
 
@@ -38,18 +38,16 @@ export default async function NotePage({ params }: NotePageProps) {
 
           <div className="flex items-center gap-4 text-xs text-soft/40 font-medium mt-4">
             <span>Editado por você hoje</span>
-            <span className="w-1 h-1 rounded-full bg-soft/20" />
-            <span>2 min de leitura</span>
           </div>
         </div>
-
-        <div className="h-[1px] w-full bg-white/5 mb-4" />
-
-        <EditorWrapper
-          initialContent={result.content || undefined}
-          documentId={result.id}
-        />
       </div>
+
+      <div className="h-[1px] w-full bg-white/5 mb-8" />
+
+      <EditorWrapper
+        initialContent={result.content || undefined}
+        documentId={result.id}
+      />
     </div>
   );
 }

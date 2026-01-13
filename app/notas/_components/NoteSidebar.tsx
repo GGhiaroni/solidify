@@ -3,7 +3,7 @@
 import { Document as Note, Roadmap } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
-import CreateNoteDialog from "./CreateNoteDialog";
+import CreateDocumentDialog from "./CreateDocumentDialog";
 import { DocumentItem } from "./DocumentItem";
 
 interface NoteSidebarProps {
@@ -24,27 +24,27 @@ export default function NoteSidebar({
           <h2 className="text-sm font-bold text-soft uppercase tracking-wider">
             Seus Cadernos
           </h2>
-          <CreateNoteDialog userRoadmaps={userRoadmaps}>
+          <CreateDocumentDialog userRoadmaps={userRoadmaps}>
             <button className="hover:cursor-pointer text-soft hover:text-white hover:bg-white/10 p-1 rounded-sm transition">
               <Plus size={16} />
             </button>
-          </CreateNoteDialog>
+          </CreateDocumentDialog>
         </div>
 
-        <CreateNoteDialog userRoadmaps={userRoadmaps}>
+        <CreateDocumentDialog userRoadmaps={userRoadmaps}>
           <button className="hover:cursor-pointer w-full flex items-center gap-2 text-sm text-soft hover:text-white hover:bg-white/5 p-2 rounded-lg transition-colors group mb-4 border border-dashed border-white/10 hover:border-white/20">
             <div className="bg-blue-500/10 p-1 rounded-md group-hover:bg-blue-500/20 transition">
               <Plus size={14} className="text-blue-500" />
             </div>
-            <span className="font-medium">Nova Página</span>
+            <span className="font-medium">Novo caderno</span>
           </button>
-        </CreateNoteDialog>
+        </CreateDocumentDialog>
       </div>
 
       <div className="flex flex-col px-2 pb-4 space-y-1">
         {documents.length === 0 && (
           <div className="text-center py-10 px-4">
-            <p className="text-xs text-soft/40">Nenhuma nota criada.</p>
+            <p className="text-xs text-soft/40">Nenhum caderno criado.</p>
           </div>
         )}
 

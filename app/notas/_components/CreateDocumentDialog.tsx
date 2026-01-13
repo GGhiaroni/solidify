@@ -19,15 +19,15 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-interface CreateNoteDialogProps {
+interface CreateDocumentDialogProps {
   userRoadmaps: Roadmap[];
   children: React.ReactNode;
 }
 
-export default function CreateNoteDialog({
+export default function CreateDocumentDialog({
   userRoadmaps,
   children,
-}: CreateNoteDialogProps) {
+}: CreateDocumentDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [selectedRoadmap, setSelectedRoadmap] = useState("none");
@@ -44,7 +44,10 @@ export default function CreateNoteDialog({
     setIsLoading(true);
 
     try {
-      const response = await createDocument(title, selectedRoadmap);
+      const response = await createDocument({
+        title: title,
+        roadmapId: selectedRoadmap,
+      });
 
       if (response.success && response.documentId) {
         toast.success("Nota criada com sucesso!");
@@ -68,16 +71,16 @@ export default function CreateNoteDialog({
 
       <DialogContent className="bg-[#1F1F1F] border-white/10 text-white sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Criar nova nota</DialogTitle>
+          <DialogTitle>Criar novo caderno</DialogTitle>
           <DialogDescription className="text-soft">
-            Dê um nome para sua nota e associe a uma jornada (opcional).
+            Dê um nome para seu caderno e associe a uma jornada (opcional).
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="title" className="text-white">
-              Título da nota
+              Título do caderno
             </Label>
             <Input
               id="title"
@@ -99,7 +102,7 @@ export default function CreateNoteDialog({
               onChange={(e) => setSelectedRoadmap(e.target.value)}
               className="hover:cursor-pointer flex h-10 w-full rounded-md border border-white/10 bg-medium px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <option value="none">Nenhuma (Anotação solta)</option>
+              <option value="none">Nenhuma (Caderno solto)</option>
               {userRoadmaps.map((roadmap) => (
                 <option key={roadmap.id} value={roadmap.id}>
                   {roadmap.title}

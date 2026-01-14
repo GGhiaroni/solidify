@@ -39,7 +39,7 @@ export default function NotasPage() {
   };
 
   return (
-    <div className="h-full flex flex-col p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="h-full flex flex-col p-8 space-y-8 max-w-7xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold font-serif mb-2 text-white">

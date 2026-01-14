@@ -43,7 +43,6 @@ export const AuroraBackground = ({
             )}
           ></div>
 
-          {/* 2. NOVA CAMADA: Partículas/Estrelas (Mais fortes agora) */}
           <div className="absolute inset-0 z-0 animate-stars opacity-50 [background-image:radial-gradient(rgba(255,255,255,0.7)_1.5px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
         </div>
 

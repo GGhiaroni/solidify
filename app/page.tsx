@@ -19,15 +19,10 @@ export default function LandingPage() {
         }}
         className="relative flex flex-col gap-4 items-center justify-center px-4"
       >
-        <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white backdrop-blur-xl mb-4">
-          <span className="flex h-2 w-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
-          <span>Versão Beta 2.0 Disponível</span>
-        </div>
-
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-serif font-bold text-white tracking-tight leading-[1.1]">
             Solidifique seu conhecimento. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-rose-400 animate-gradient">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-rose-400 animate-gradient bg-[length:200%_auto]">
               Domine o seu futuro.
             </span>
           </h1>
@@ -40,7 +35,7 @@ export default function LandingPage() {
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
           <Link href="/dashboard">
-            <Button className="h-12 px-8 rounded-full bg-white text-black hover:bg-neutral-200 text-base font-semibold transition-all hover:scale-105">
+            <Button className="hover:cursor-pointer h-12 px-8 rounded-full bg-white text-black hover:bg-neutral-200 text-base font-semibold transition-all hover:scale-105">
               Começar Agora
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -49,7 +44,7 @@ export default function LandingPage() {
           <Link href="/sign-in">
             <Button
               variant="ghost"
-              className="h-12 px-8 rounded-full text-white hover:bg-white/10 text-base transition-all"
+              className="hover:cursor-pointer underline h-12 px-8 rounded-full text-white hover:bg-white/10 text-base transition-all"
             >
               Já tenho conta
             </Button>

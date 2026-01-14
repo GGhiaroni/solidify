@@ -1,8 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
+
 
 
 @keyframes aurora {
@@ -11,6 +11,16 @@
   }
   to {
     background-position: 350% 50%, 350% 50%;
+  }
+}
+
+
+@keyframes stars {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
   }
 }
 
@@ -45,19 +55,20 @@
 }
 
 
+
 @theme {
   
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui;
   --font-serif: var(--font-serif), ui-serif, Georgia, serif;
 
-  
   --color-primary-custom: #0F2854;
   --color-medium: #1C4D8D;
   --color-soft: #4988C4;
   --color-light: #BDE8F5;
 
   
-  --animate-aurora: aurora 60s linear infinite;
+  --animate-aurora: aurora 40s linear infinite; 
+  --animate-stars: stars 120s linear infinite;  
   --animate-gradient: gradient 8s ease infinite;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -93,12 +104,11 @@
 }
 
 
+
 :root {
-  
   background-color: #0F2854; 
   color: #BDE8F5;
 
-  
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -156,7 +166,6 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -175,6 +184,4 @@
 
 .bn-container {
   width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-}
+  max-width: 100% !important }

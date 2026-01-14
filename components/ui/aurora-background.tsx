@@ -17,7 +17,7 @@ export const AuroraBackground = ({
     <main>
       <div
         className={cn(
-          "relative flex flex-col h-[100vh] items-center justify-center bg-zinc-950 text-slate-950 transition-bg",
+          "relative flex flex-col h-[100vh] items-center justify-center bg-zinc-950 text-slate-950 transition-bg overflow-hidden",
           className
         )}
         {...props}
@@ -37,13 +37,17 @@ export const AuroraBackground = ({
             after:[background-size:200%,_100%] 
             after:animate-aurora after:[background-attachment:fixed] after:mix-blend-difference
             pointer-events-none
-            absolute -inset-[10px] opacity-50 will-change-transform`,
+            absolute -inset-[10px] opacity-40 will-change-transform`,
               showRadialGradient &&
                 `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]`
             )}
           ></div>
+
+          {/* 2. NOVA CAMADA: Partículas/Estrelas (Mais fortes agora) */}
+          <div className="absolute inset-0 z-0 animate-stars opacity-50 [background-image:radial-gradient(rgba(255,255,255,0.7)_1.5px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
         </div>
-        {children}
+
+        <div className="relative z-10">{children}</div>
       </div>
     </main>
   );

@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
-const limit = 0;
+const limit = 12;
 
 export default async function getDocuments(offset = 0) {
   const clerkUser = await currentUser();
@@ -21,7 +21,7 @@ export default async function getDocuments(offset = 0) {
           email: userEmail,
         },
         isArchived: false,
-        parentDocument: null,
+        parentDocumentId: null,
       },
       orderBy: {
         createdAt: "desc",
@@ -37,7 +37,7 @@ export default async function getDocuments(offset = 0) {
           email: userEmail,
         },
         isArchived: false,
-        parentDocument: null,
+        parentDocumentId: null,
       },
     });
 

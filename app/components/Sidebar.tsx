@@ -2,18 +2,18 @@
 
 import { cn } from "@/lib/utils";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { BarChart3, BookOpen, Home, Map, Timer } from "lucide-react";
+import { BarChart3, BookOpen, Gauge, Map, Timer } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logomarca from "./Logomarca";
 
 const menuItems = [
-  { icon: Home, label: "Overview & Dashboard", href: "/" },
+  { icon: Gauge, label: "Overview & Dashboard", href: "/dashboard" },
   { icon: Map, label: "Minhas jornadas", href: "/minhas-jornadas" },
   { icon: Timer, label: "Pomodoro", href: "/pomodoro" },
   { icon: BarChart3, label: "Study Tracker", href: "/tracker" },
   { icon: BookOpen, label: "Notas", href: "/notas" },
-  //{ icon: Music, label: "Lofi Player", href: "/lofi" },
+  // { icon: Music, label: "Lofi Player", href: "/lofi" },
 ];
 
 export default function Sidebar() {

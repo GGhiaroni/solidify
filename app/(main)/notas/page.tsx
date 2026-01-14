@@ -1,11 +1,11 @@
 "use client";
 
+import getDocuments from "@/app/actions/get-documents";
 import { Button } from "@/components/ui/button";
 import { Document } from "@prisma/client";
 import { Loader2, Plus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import getDocuments from "../actions/get-documents";
 import DocumentCard from "./_components/DocumentCard";
 
 export default function NotasPage() {

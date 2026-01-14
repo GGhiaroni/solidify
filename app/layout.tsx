@@ -2,12 +2,6 @@ import { EdgeStoreProvider } from "@/lib/edgestore";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Lora, Montserrat } from "next/font/google";
-import LofiPlayer from "./components/LofiPlayer";
-import MiniPlayerPomodoro from "./components/MiniPlayerPomodoro";
-import Sidebar from "./components/Sidebar";
-import ToastProvider from "./components/ToastProvider";
-import { LofiProvider } from "./context/LofiContext";
-import { PomodoroProvider } from "./context/PomodoroContext";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -36,21 +30,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="pt-BR" suppressHydrationWarning>
         <body
-          className={`${montserrat.variable} ${lora.variable} font-sans bg-primary text-light antialiased flex`}
+          className={`${montserrat.variable} ${lora.variable} font-sans bg-primary text-light antialiased `}
         >
-          <EdgeStoreProvider>
-            <PomodoroProvider>
-              <LofiProvider>
-                <Sidebar />
-                <main className="flex-1 h-screen overflow-y-auto p-8">
-                  {children}
-                </main>
-                <LofiPlayer />
-                <MiniPlayerPomodoro />
-                <ToastProvider />
-              </LofiProvider>
-            </PomodoroProvider>
-          </EdgeStoreProvider>
+          <EdgeStoreProvider>{children}</EdgeStoreProvider>
         </body>
       </html>
     </ClerkProvider>

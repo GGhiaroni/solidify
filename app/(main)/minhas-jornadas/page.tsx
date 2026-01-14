@@ -1,10 +1,10 @@
+import CreateJourneyDialog from "@/app/components/CreateJourneyDialog";
+import { StartJourneyButton } from "@/app/components/StartJourneyButton";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { ArrowRight, Map } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import CreateJourneyDialog from "../components/CreateJourneyDialog";
-import { StartJourneyButton } from "../components/StartJourneyButton";
 
 export default async function MinhasJornadas() {
   const user = await currentUser();

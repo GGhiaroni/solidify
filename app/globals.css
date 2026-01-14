@@ -3,6 +3,33 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
 @theme {
 
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui;
@@ -53,6 +80,10 @@
 }
 
 @theme inline {
+
+  --animate-aurora: aurora 60s linear infinite;
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
 
   --radius-sm: calc(var(--radius) - 4px);
 

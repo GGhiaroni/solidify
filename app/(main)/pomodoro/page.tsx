@@ -1,5 +1,8 @@
 "use client";
 
+import DailyQuote from "@/app/components/DailyQuote";
+import SessionItem from "@/app/components/SessionItem";
+import { usePomodoro } from "@/app/context/PomodoroContext";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,9 +27,6 @@ import {
   Zap,
 } from "lucide-react";
 import React, { useState } from "react";
-import DailyQuote from "../components/DailyQuote";
-import SessionItem from "../components/SessionItem";
-import { usePomodoro } from "../context/PomodoroContext";
 
 export default function PomodoroPage() {
   const {

@@ -3,8 +3,17 @@
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+
+const FEATURES = [
+  "Planeje seus estudos com a assistência do Gemini, a IA do Google",
+  "Monitore suas sessões de estudo e o tempo dedicado a cada tópico",
+  "Aproveite o Pomodoro Focus integrado para maior concentração",
+  "Acompanhe seu progresso semanal, mensal e anual",
+  "Concentre suas anotações com a criação de Cadernos personalizados",
+  "Evolua até sua melhor versão",
+];
 
 export default function LandingPage() {
   return (
@@ -28,7 +37,7 @@ export default function LandingPage() {
           </h1>
         </div>
 
-        <p className="font-light text-xl md:text-2xl text-neutral-300 max-w-2xl text-center mt-6 leading-relaxed">
+        <p className="font-semibold text-xl md:text-2xl text-neutral-300 max-w-2xl text-center mt-6 leading-relaxed">
           O ecossistema completo para organizar estudos, gerenciar projetos e se
           tornar quem você nasceu para ser.
         </p>
@@ -44,7 +53,7 @@ export default function LandingPage() {
           <Link href="/sign-in">
             <Button
               variant="ghost"
-              className="hover:cursor-pointer underline h-12 px-8 rounded-full text-white hover:bg-white/10 text-base transition-all"
+              className="hover:cursor-pointer underline h-12 px-8 rounded-full hover:text-white text-white hover:bg-white/10 text-base transition-all"
             >
               Já tenho conta
             </Button>
@@ -55,16 +64,29 @@ export default function LandingPage() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1, duration: 1 }}
-          className="mt-16 p-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md hidden md:block"
+          className="mt-16 w-full max-w-5xl p-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md hidden md:flex overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
         >
-          <div className="flex items-center gap-4 text-white/50 text-sm">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span>Integração com Pomodoro</span>
-            <span className="w-1 h-1 bg-white/20 rounded-full" />
-            <span>Notas em Markdown</span>
-            <span className="w-1 h-1 bg-white/20 rounded-full" />
-            <span>Study Tracker</span>
-          </div>
+          <motion.div
+            className="flex gap-8 whitespace-nowrap"
+            animate={{
+              x: "-50%",
+            }}
+            transition={{
+              duration: 40,
+              ease: "linear",
+              repeat: Infinity,
+            }}
+          >
+            {[...FEATURES, ...FEATURES].map((feature, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 text-white/70 text-sm"
+              >
+                ✨<span>{feature}</span>
+                <span className="w-1 h-1 bg-white/20 rounded-full flex-shrink-0" />
+              </div>
+            ))}
+          </motion.div>
         </motion.div>
       </motion.div>
     </AuroraBackground>

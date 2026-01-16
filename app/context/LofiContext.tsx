@@ -10,6 +10,8 @@ interface LofiContextType {
   togglePlay: () => void;
   setVolume: (value: number) => void;
   changeStation: (stationId: string) => void;
+  nextStation: () => void;
+  prevStation: () => void;
 }
 
 const LofiContext = createContext({} as LofiContextType);
@@ -30,6 +32,21 @@ export function LofiProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const nextStation = () => {
+    const currentIndex = stations.findIndex((s) => s.id === currentStation.id);
+    const nextIndex = (currentIndex + 1) % stations.length;
+    setCurrentStation(stations[nextIndex]);
+    setIsPlaying(true);
+  };
+
+  const prevStation = () => {
+    const currentIndex = stations.findIndex((s) => s.id === currentStation.id);
+
+    const prevIndex = (currentIndex - 1 + stations.length) % stations.length;
+    setCurrentStation(stations[prevIndex]);
+    setIsPlaying(true);
+  };
+
   return (
     <LofiContext.Provider
       value={{
@@ -39,6 +56,8 @@ export function LofiProvider({ children }: { children: ReactNode }) {
         togglePlay,
         setVolume,
         changeStation,
+        nextStation,
+        prevStation,
       }}
     >
       {children}

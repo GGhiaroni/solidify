@@ -3,8 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
-
 @keyframes aurora {
   from {
     background-position: 50% 50%, 50% 50%;
@@ -13,7 +11,6 @@
     background-position: 350% 50%, 350% 50%;
   }
 }
-
 
 @keyframes stars {
   0% {
@@ -66,7 +63,6 @@
   --color-soft: #4988C4;
   --color-light: #BDE8F5;
 
-  
   --animate-aurora: aurora 40s linear infinite; 
   --animate-stars: stars 120s linear infinite;  
   --animate-gradient: gradient 8s ease infinite;

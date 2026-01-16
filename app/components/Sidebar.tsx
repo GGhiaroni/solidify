@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { BarChart3, BookOpen, Gauge, Map, Timer } from "lucide-react";
+import { BarChart3, BookOpen, Gauge, Map, Music, Timer } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logomarca from "./Logomarca";
@@ -13,7 +13,7 @@ const menuItems = [
   { icon: Timer, label: "Pomodoro", href: "/pomodoro" },
   { icon: BarChart3, label: "Study Tracker", href: "/tracker" },
   { icon: BookOpen, label: "Notas", href: "/notas" },
-  // { icon: Music, label: "Lofi Player", href: "/lofi" },
+  { icon: Music, label: "Lofi Player", href: "/lofi" },
 ];
 
 export default function Sidebar() {

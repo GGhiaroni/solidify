@@ -50,6 +50,7 @@ export const DocumentItem = ({
     }).then((response) => {
       if (response.success && response.documentId) {
         if (!isExpanded) setIsExpanded(true);
+        router.refresh();
         router.push(`/cadernos/${response.documentId}`);
       } else {
         throw new Error("Erro ao criar nota.");

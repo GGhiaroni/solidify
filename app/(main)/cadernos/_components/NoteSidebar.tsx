@@ -4,7 +4,7 @@ import { Document as Note, Roadmap } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
 import CreateDocumentDialog from "./CreateDocumentDialog";
-import { DocumentItem } from "./DocumentItem";
+import { DocumentList } from "./DocumentList";
 
 interface NoteSidebarProps {
   documents: Note[];
@@ -48,9 +48,7 @@ export default function NoteSidebar({
           </div>
         )}
 
-        {documents.map((doc) => (
-          <DocumentItem key={doc.id} document={doc} />
-        ))}
+        <DocumentList initialData={documents} />
       </div>
     </aside>
   );

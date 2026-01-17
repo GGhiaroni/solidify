@@ -1,27 +1,27 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function getSidebarDocuments(parentDocumentId?: string) {
-  const { userId } = await auth();
+  const clerkUser = await currentUser();
 
-  if (!userId) return [];
+  if (!clerkUser || !clerkUser.emailAddresses[0]) return [];
+
+  const email = clerkUser.emailAddresses[0].emailAddress;
+  const dbUser = await prisma.user.findUnique({ where: { email } });
+
+  if (!dbUser) return [];
 
   const documents = await prisma.document.findMany({
     where: {
-      userId,
+      userId: parentDocumentId ? undefined : dbUser.id,
+
       parentDocumentId: parentDocumentId || null,
       isArchived: false,
     },
     orderBy: {
       createdAt: "desc",
-    },
-    select: {
-      id: true,
-      title: true,
-      icon: true,
-      parentDocumentId: true,
     },
   });
 

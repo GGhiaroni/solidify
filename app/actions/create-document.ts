@@ -47,7 +47,7 @@ export async function createDocument({
     revalidatePath("/cadernos", "layout");
     revalidatePath(`/cadernos/${parentDocumentId}`);
 
-    return { success: true, document, documentId: document.id };
+    return { success: true, documentId: document.id };
   } catch (error) {
     console.log("Erro ao criar nota:", error);
     return { success: false, error: "Erro interno" };

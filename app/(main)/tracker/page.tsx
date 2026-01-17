@@ -1,4 +1,4 @@
-import { Heatmap } from "@/app/components/Heatmap";
+import { Heatmap } from "@/app/components/Heatmap"; // Verifique se o caminho está correto
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { format, isAfter, subDays } from "date-fns";
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { redirect } from "next/navigation";
 
+// --- Interfaces ---
 interface TimeCardProps {
   label: string;
   minutes: number;
@@ -23,8 +24,41 @@ interface TimeCardProps {
 interface InsightTileProps {
   label: string;
   value: string;
+  subtext?: string; // Adicionei opcional para dar contexto
   icon: React.ReactNode;
 }
+
+// --- Função Helper de Formatação (UX Melhorada) ---
+const formatSmartTime = (totalMinutes: number) => {
+  if (totalMinutes === 0) {
+    return { value: "0", unit: "min", full: "0 min" };
+  }
+
+  if (totalMinutes < 60) {
+    return {
+      value: totalMinutes.toString(),
+      unit: "min",
+      full: `${totalMinutes} min`,
+    };
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (minutes === 0) {
+    return {
+      value: hours.toString(),
+      unit: hours === 1 ? "hora" : "horas",
+      full: `${hours}h`,
+    };
+  }
+
+  return {
+    value: `${hours}h ${minutes.toString().padStart(2, "0")}m`,
+    unit: "",
+    full: `${hours}h ${minutes}m`,
+  };
+};
 
 export default async function StudyTrackerPage() {
   const clerkUser = await currentUser();
@@ -48,6 +82,7 @@ export default async function StudyTrackerPage() {
 
   const sessions = user?.sessions || [];
 
+  // --- Cálculos de Tempo ---
   const getMinutesLastNDays = (days: number) => {
     const cutoffDate = subDays(new Date(), days);
     return sessions
@@ -66,13 +101,12 @@ export default async function StudyTrackerPage() {
   const longestSession =
     sessions.length > 0 ? Math.max(...sessions.map((s) => s.duration)) : 0;
 
-  const formatDuration = (mins: number) => {
-    if (mins < 60) return `${mins} min`;
-    const hours = Math.floor(mins / 60);
-    const remainingMins = mins % 60;
-    return `${hours}h ${remainingMins}m`;
-  };
+  // --- Formatação dos Dados para Exibição ---
+  const formattedTotal = formatSmartTime(totalMinutesAllTime);
+  const formattedAvg = formatSmartTime(avgSessionTime);
+  const formattedLongest = formatSmartTime(longestSession);
 
+  // --- Preparação do Heatmap ---
   const sessionsMap = sessions.reduce((acc, session) => {
     const date = session.createdAt.toISOString().split("T")[0];
     if (!acc[date]) acc[date] = 0;
@@ -106,6 +140,7 @@ export default async function StudyTrackerPage() {
         </p>
       </header>
 
+      {/* Cards Superiores */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <TimeCard
           label="Últimos 7 dias"
@@ -127,13 +162,14 @@ export default async function StudyTrackerPage() {
         />
       </div>
 
-      <section className="bg-medium/20 border border-soft/10 p-8 rounded-3xl">
+      {/* Seção Heatmap */}
+      <section className="bg-[#161b22] border border-white/5 p-8 rounded-3xl shadow-sm">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Flame className="text-orange-500" size={24} />
             <h3 className="text-xl font-bold text-light">Consistência Anual</h3>
           </div>
-          <span className="text-xs text-soft uppercase tracking-widest font-bold bg-white/5 px-3 py-1 rounded-full">
+          <span className="text-xs text-soft uppercase tracking-widest font-bold bg-white/5 px-3 py-1 rounded-full border border-white/5">
             {sessions.length} sessões totais
           </span>
         </div>
@@ -141,72 +177,112 @@ export default async function StudyTrackerPage() {
         <Heatmap data={days365} />
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <InsightTile
-          label="Tempo Total de Vida"
-          value={formatDuration(totalMinutesAllTime)}
-          icon={<Clock className="text-yellow-500" />}
-        />
-        <InsightTile
-          label="Média por Sessão"
-          value={formatDuration(avgSessionTime)}
-          icon={<TrendingUp className="text-cyan-500" />}
-        />
-        <InsightTile
-          label="Sessão Mais Longa"
-          value={formatDuration(longestSession)}
-          icon={<Trophy className="text-rose-500" />}
-        />
-        <InsightTile
-          label="Última Sessão"
-          value={
-            sessions[0]
-              ? format(new Date(sessions[0].createdAt), "dd 'de' MMM", {
-                  locale: ptBR,
-                })
-              : "--"
-          }
-          icon={<History className="text-indigo-500" />}
-        />
+      {/* Seção de Insights Gerais */}
+      <section>
+        <h3 className="text-xl font-bold text-light mb-6 flex items-center gap-2">
+          <Trophy className="text-yellow-500" size={20} />
+          Conquistas & Estatísticas
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <InsightTile
+            label="Histórico total"
+            value={formattedTotal.full}
+            subtext="Minutos totais registrados"
+            icon={<Clock className="text-yellow-500" />}
+          />
+          <InsightTile
+            label="Média por Sessão"
+            value={formattedAvg.full}
+            subtext="Média de foco"
+            icon={<TrendingUp className="text-cyan-500" />}
+          />
+          <InsightTile
+            label="Sessão Mais Longa"
+            value={formattedLongest.full}
+            subtext="Seu recorde pessoal"
+            icon={<Trophy className="text-rose-500" />}
+          />
+          <InsightTile
+            label="Última Sessão"
+            value={
+              sessions[0]
+                ? format(new Date(sessions[0].createdAt), "dd 'de' MMM", {
+                    locale: ptBR,
+                  })
+                : "--"
+            }
+            subtext={
+              sessions[0]
+                ? format(new Date(sessions[0].createdAt), "HH:mm'h'", {
+                    locale: ptBR,
+                  })
+                : "Sem dados"
+            }
+            icon={<History className="text-indigo-500" />}
+          />
+        </div>
       </section>
     </div>
   );
 }
 
+// --- Componentes Visuais ---
+
 function TimeCard({ label, minutes, icon, trend }: TimeCardProps) {
-  const hours = (minutes / 60).toFixed(1);
+  const { value, unit } = formatSmartTime(minutes);
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-medium/40 to-medium/10 border border-soft/10 p-6 rounded-3xl group hover:border-soft/30 transition-all">
-      <div className="flex justify-between items-start mb-4">
-        <div className="p-3 bg-white/5 rounded-2xl">{icon}</div>
-        <span className="text-xs font-bold uppercase tracking-wider text-soft/60 bg-black/20 px-2 py-1 rounded-lg">
+    <div className="relative overflow-hidden bg-[#161b22] border border-white/5 p-6 rounded-3xl group hover:border-white/10 transition-all shadow-lg">
+      <div className="flex justify-between items-start mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-blue-500/10 rounded-xl text-blue-400 group-hover:bg-blue-500/20 transition-colors">
+            {icon}
+          </div>
+          <h3 className="text-soft text-sm font-semibold uppercase tracking-wide">
+            {label}
+          </h3>
+        </div>
+
+        <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 bg-white/5 px-2 py-1 rounded-md border border-white/5">
           {trend}
         </span>
       </div>
 
-      <div className="space-y-1">
-        <h3 className="text-soft text-sm font-medium">{label}</h3>
-        <p className="text-4xl font-black text-light tracking-tight">
-          {hours}
-          <span className="text-lg text-soft/50 font-normal ml-1">h</span>
+      <div className="flex items-baseline gap-1">
+        <p className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+          {value}
         </p>
+        {unit && (
+          <span className="text-xl text-soft/60 font-medium">{unit}</span>
+        )}
       </div>
 
-      <div className="mt-4 text-xs text-soft/50 font-medium">
-        equivalente a {minutes} minutos
+      {/* Barra de progresso visual baseada em uma meta fictícia de 600min (10h) para dar contexto visual */}
+      <div className="mt-4 w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full opacity-80"
+          style={{ width: `${Math.min((minutes / 600) * 100, 100)}%` }}
+        />
       </div>
     </div>
   );
 }
 
-function InsightTile({ label, value, icon }: InsightTileProps) {
+function InsightTile({ label, value, subtext, icon }: InsightTileProps) {
   return (
-    <div className="bg-medium/20 border border-soft/10 p-5 rounded-2xl flex items-center gap-4 hover:bg-medium/30 transition-colors">
-      <div className="p-3 bg-black/20 rounded-xl">{icon}</div>
+    <div className="bg-[#161b22] border border-white/5 p-5 rounded-2xl flex items-center justify-between hover:border-white/10 transition-colors group">
       <div>
-        <p className="text-xs text-soft font-bold uppercase">{label}</p>
-        <p className="text-xl font-bold text-white">{value}</p>
+        <p className="text-xs text-soft/70 font-bold uppercase tracking-wider mb-1">
+          {label}
+        </p>
+        <p className="text-2xl font-bold text-white">{value}</p>
+        {subtext && (
+          <p className="text-xs text-soft/50 mt-1 font-medium">{subtext}</p>
+        )}
+      </div>
+      <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform border border-white/5">
+        {icon}
       </div>
     </div>
   );

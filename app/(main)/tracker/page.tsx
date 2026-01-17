@@ -1,4 +1,4 @@
-import { Heatmap } from "@/app/components/Heatmap"; // Verifique se o caminho está correto
+import { Heatmap } from "@/app/components/Heatmap";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { format, isAfter, subDays } from "date-fns";
@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { redirect } from "next/navigation";
 
-// --- Interfaces ---
 interface TimeCardProps {
   label: string;
   minutes: number;
@@ -24,11 +23,10 @@ interface TimeCardProps {
 interface InsightTileProps {
   label: string;
   value: string;
-  subtext?: string; // Adicionei opcional para dar contexto
+  subtext?: string;
   icon: React.ReactNode;
 }
 
-// --- Função Helper de Formatação (UX Melhorada) ---
 const formatSmartTime = (totalMinutes: number) => {
   if (totalMinutes === 0) {
     return { value: "0", unit: "min", full: "0 min" };
@@ -82,7 +80,6 @@ export default async function StudyTrackerPage() {
 
   const sessions = user?.sessions || [];
 
-  // --- Cálculos de Tempo ---
   const getMinutesLastNDays = (days: number) => {
     const cutoffDate = subDays(new Date(), days);
     return sessions
@@ -101,12 +98,10 @@ export default async function StudyTrackerPage() {
   const longestSession =
     sessions.length > 0 ? Math.max(...sessions.map((s) => s.duration)) : 0;
 
-  // --- Formatação dos Dados para Exibição ---
   const formattedTotal = formatSmartTime(totalMinutesAllTime);
   const formattedAvg = formatSmartTime(avgSessionTime);
   const formattedLongest = formatSmartTime(longestSession);
 
-  // --- Preparação do Heatmap ---
   const sessionsMap = sessions.reduce((acc, session) => {
     const date = session.createdAt.toISOString().split("T")[0];
     if (!acc[date]) acc[date] = 0;
@@ -140,7 +135,6 @@ export default async function StudyTrackerPage() {
         </p>
       </header>
 
-      {/* Cards Superiores */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <TimeCard
           label="Últimos 7 dias"
@@ -162,7 +156,6 @@ export default async function StudyTrackerPage() {
         />
       </div>
 
-      {/* Seção Heatmap */}
       <section className="bg-[#161b22] border border-white/5 p-8 rounded-3xl shadow-sm">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -177,7 +170,6 @@ export default async function StudyTrackerPage() {
         <Heatmap data={days365} />
       </section>
 
-      {/* Seção de Insights Gerais */}
       <section>
         <h3 className="text-xl font-bold text-light mb-6 flex items-center gap-2">
           <Trophy className="text-yellow-500" size={20} />
@@ -227,8 +219,6 @@ export default async function StudyTrackerPage() {
   );
 }
 
-// --- Componentes Visuais ---
-
 function TimeCard({ label, minutes, icon, trend }: TimeCardProps) {
   const { value, unit } = formatSmartTime(minutes);
 
@@ -258,7 +248,6 @@ function TimeCard({ label, minutes, icon, trend }: TimeCardProps) {
         )}
       </div>
 
-      {/* Barra de progresso visual baseada em uma meta fictícia de 600min (10h) para dar contexto visual */}
       <div className="mt-4 w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full opacity-80"

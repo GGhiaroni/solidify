@@ -29,7 +29,7 @@ export default async function deleteSubPageNote(subpageId: string) {
         error: "Nota não encontrada ou usuário sem permissão.",
       };
     }
-    revalidatePath("/cadernos");
+    revalidatePath("/cadernos", "layout");
     return { success: true };
   } catch (error) {
     console.error("Erro ao deletar nota.", error);

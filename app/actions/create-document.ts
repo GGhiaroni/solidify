@@ -44,7 +44,7 @@ export async function createDocument({
       },
     });
 
-    revalidatePath("/notas");
+    revalidatePath("/cadernos");
     return { success: true, documentId: document.id };
   } catch (error) {
     console.log("Erro ao criar nota:", error);

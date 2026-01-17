@@ -25,7 +25,7 @@ export default async function NotePage({ params }: NotePageProps) {
     },
   });
 
-  if (!result) redirect("/notas");
+  if (!result) redirect("/cadernos");
 
   return (
     <div className="min-h-full px-10 dark:bg-[#0F1117]">

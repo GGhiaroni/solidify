@@ -43,8 +43,8 @@ export default async function updateDocument(
       };
     }
 
-    revalidatePath("/notas");
-    revalidatePath(`/notas/${documentId}`);
+    revalidatePath("/cadernos");
+    revalidatePath(`/cadernos/${documentId}`);
 
     return { success: true };
   } catch (error) {

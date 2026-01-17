@@ -26,7 +26,7 @@ export default function DocumentCard({ document, index }: DocumentCardProps) {
 
   return (
     <Link
-      href={`/notas/${document.id}`}
+      href={`/cadernos/${document.id}`}
       className={cn(
         "group relative flex flex-col justify-between h-[200px] w-full rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
         colorClass

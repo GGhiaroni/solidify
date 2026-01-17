@@ -1,0 +1,20 @@
+# Query: /notas
+
+7 results - 5 files
+
+app/(main)/cadernos/_components/DocumentItem.tsx:
+  53:         router.push(`/cadernos/${response.documentId}`);
+  75:         href={`/cadernos/${document.id}`}
+
+app/(main)/cadernos/_components/NoteItemMenu.tsx:
+  29:         router.push("/cadernos");
+
+app/actions/create-document.ts:
+  47:     revalidatePath("/cadernos");
+
+app/actions/delete-document.ts:
+  32:     revalidatePath("/cadernos");
+
+app/actions/update-document.ts:
+  46:     revalidatePath("/cadernos");
+  47:     revalidatePath(`/cadernos/${documentId}`);

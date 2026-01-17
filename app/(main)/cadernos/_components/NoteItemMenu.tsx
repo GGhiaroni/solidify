@@ -26,7 +26,7 @@ export default function NoteItemMenu({ documentId }: NoteItemMenuProps) {
   const onDelete = () => {
     const promise = deleteDocument(documentId).then((response) => {
       if (response.success) {
-        router.push("/notas");
+        router.push("/cadernos");
         return "Nota deletada!";
       } else {
         throw new Error(response.error || "Erro ao deletar nota.");

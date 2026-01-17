@@ -54,7 +54,7 @@ export default function CreateDocumentDialog({
         setIsOpen(false);
         setTitle("");
         setSelectedRoadmap("none");
-        router.push(`/notas/${response.documentId}`);
+        router.push(`/cadernos/${response.documentId}`);
       } else {
         toast.error("Erro ao criar nota.");
       }

@@ -50,7 +50,7 @@ export const DocumentItem = ({
     }).then((response) => {
       if (response.success && response.documentId) {
         if (!isExpanded) setIsExpanded(true);
-        router.push(`/notas/${response.documentId}`);
+        router.push(`/cadernos/${response.documentId}`);
       } else {
         throw new Error("Erro ao criar nota.");
       }
@@ -72,7 +72,7 @@ export const DocumentItem = ({
   return (
     <div className="w-full relative">
       <Link
-        href={`/notas/${document.id}`}
+        href={`/cadernos/${document.id}`}
         className={cn(
           "group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-white/5 flex items-center text-soft font-medium transition cursor-pointer",
           active && "bg-white/10 text-white"

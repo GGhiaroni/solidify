@@ -12,7 +12,7 @@ const menuItems = [
   { icon: Map, label: "Minhas jornadas", href: "/minhas-jornadas" },
   { icon: Timer, label: "Pomodoro", href: "/pomodoro" },
   { icon: BarChart3, label: "Study Tracker", href: "/tracker" },
-  { icon: BookOpen, label: "Notas", href: "/notas" },
+  { icon: BookOpen, label: "Meus cadernos", href: "/cadernos" },
   { icon: Music, label: "Lofi Player", href: "/lofi" },
 ];
 

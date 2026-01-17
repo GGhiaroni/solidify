@@ -29,7 +29,7 @@ export default async function deleteDocument(documentId: string) {
         error: "Nota não encontrada ou usuário sem permissão.",
       };
     }
-    revalidatePath("/notas");
+    revalidatePath("/cadernos");
     return { success: true };
   } catch (error) {
     console.error("Erro ao deletar nota.", error);

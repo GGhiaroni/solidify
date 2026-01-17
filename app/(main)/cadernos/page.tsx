@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import DocumentCard from "./_components/DocumentCard";
 
-export default function NotasPage() {
+export default function CadernosPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -58,7 +58,6 @@ export default function NotasPage() {
           <Loader2 className="animate-spin mr-2" /> Carregando seus cadernos...
         </div>
       ) : documents.length === 0 ? (
-        // Estado Vazio
         <div className="h-[50vh] flex flex-col items-center justify-center text-center space-y-4">
           <Image
             src="/empty.png"

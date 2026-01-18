@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { toast } from "react-toastify";
@@ -50,32 +51,50 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [finishedSession, setFinishedSession] = useState<string | null>(null);
   const [expectedEndTime, setExpectedEndTime] = useState<number | null>(null);
 
-  const playSound = useCallback(
-    (type: "start" | "pause" | "ending" | "finished" | "restart") => {
-      const files = {
-        start: "/sounds/click-start-focus.wav",
-        pause: "/sounds/click-pause.wav",
-        ending: "/sounds/session-ending.wav",
-        finished: "/sounds/session-finished.wav",
-        restart: "/sounds/click-restart.wav",
-      };
-      const audio = new Audio(files[type]);
+  const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
+
+  useEffect(() => {
+    const files = {
+      start: "/sounds/click-start-focus.wav",
+      pause: "/sounds/click-pause.wav",
+      ending: "/sounds/session-ending.wav",
+      finished: "/sounds/session-finished.wav",
+      restart: "/sounds/click-restart.wav",
+    };
+
+    Object.entries(files).forEach(([key, src]) => {
+      const audio = new Audio(src);
+      audio.preload = "auto";
+      audioRefs.current[key] = audio;
+    });
+  }, []);
+
+  const playSound = useCallback((type: string) => {
+    const audio = audioRefs.current[type];
+    if (audio) {
+      audio.currentTime = 0;
       audio.volume = 0.6;
-      audio.play().catch((err) => console.error("Erro ao tocar áudio:", err));
-    },
-    [],
-  );
+      audio.play().catch((err) => console.log("Audio play blocked:", err));
+    }
+  }, []);
 
   const sendNotification = useCallback(() => {
     if (!("Notification" in window) || Notification.permission !== "granted")
       return;
+
     const notification = new Notification("Sessão Finalizada! 🎯", {
       body:
         mode === "focus"
           ? "Hora de descansar um pouco."
           : "Pausa encerrada. Vamos focar?",
+      icon: "/favicon.ico",
+      requireInteraction: true,
     });
-    notification.onclick = () => window.focus();
+
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
   }, [mode]);
 
   const changeMode = useCallback((newMode: TimerMode) => {

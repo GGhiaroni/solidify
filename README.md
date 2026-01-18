@@ -25,6 +25,10 @@ A persistência de dados foi um dos maiores desafios técnicos. Optei pelo **Sup
 
 Implementei o **Clerk** para gerenciar a identidade de forma robusta. Ele oferece proteção de rotas via Middleware e integração nativa com o Next.js, permitindo um fluxo de autenticação seguro e sem a necessidade de manter um backend dedicado para tokens e sessões.
 
+### Heatmap estilo GitHub
+
+Adicionei ao projeto um **Heatmap estilo GitHub**, em que o usuário consegue ter insights rápidos e visuais do seu desempenho no último ano, mês, semana e dias. Tudo aqui foi pensando para motivar ainda mais quem está atrás de "solidificar" os seus objetivos.
+
 ### Resiliência em Segundo Plano: O Sistema Pomodoro
 
 Navegadores modernos aplicam _throttling_ em abas inativas, o que costuma "congelar" cronômetros baseados em `setInterval`.

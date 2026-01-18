@@ -1,4 +1,4 @@
-# ⚡ Solidify | Productivity Ecosystem & Knowledge Base
+# ⚡ Solidify | O seu ecossistema de produtividade & desempenho
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.0-blue?style=for-the-badge&logo=react)
@@ -6,7 +6,9 @@
 ![Prisma](https://img.shields.io/badge/Prisma-6.1-2D3748?style=for-the-badge&logo=prisma)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase)
 
-O **Solidify** é uma plataforma avançada de gestão de conhecimento e produtividade, projetada para ser o "segundo cérebro" do usuário moderno. O projeto foca em três pilares principais: organização hierárquica de informações, automação inteligente via LLMs e um sistema de foco resiliente a ambientes de navegadores restritivos.
+O **Solidify** é uma **plataforma web** avançada de gestão de conhecimento e produtividade, projetada para ser o "segundo cérebro" do usuário moderno. O projeto foca em três pilares principais: organização hierárquica de informações, automação inteligente via LLMs e um sistema de foco resiliente a ambientes de navegadores restritivos.
+
+### deploy do projeto na Vercel: https://solidify-vxpu.vercel.app
 
 ---
 

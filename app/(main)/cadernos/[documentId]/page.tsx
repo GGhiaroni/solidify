@@ -51,6 +51,7 @@ export default async function NotePage({ params }: NotePageProps) {
         <SubPagesList
           childrenDocs={result.childDocuments}
           parentDocumentId={result.id}
+          isRootNode={false}
         />
 
         <div className="h-[1px] w-full bg-white/5 mb-8" />

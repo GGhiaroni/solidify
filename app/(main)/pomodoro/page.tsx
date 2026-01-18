@@ -59,7 +59,7 @@ export default function PomodoroPage() {
 
   const totalMinutesToday = todaySessions.reduce(
     (acc, session) => acc + session.duration,
-    0
+    0,
   );
 
   const handleSaveSessionName = () => {
@@ -132,9 +132,14 @@ export default function PomodoroPage() {
           <Button
             size="icon"
             variant="ghost"
-            className="flex gap-1 hover:cursor-pointer w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-all hover:scale-110 duration-300 items-center justify-center"
+            disabled={time < 5 * 60 || isActive}
+            className={cn(
+              "flex gap-1 hover:cursor-pointer w-16 h-16 rounded-full text-soft hover:text-white hover:bg-white/10 transition-all hover:scale-110 duration-300 items-center justify-center",
+              (time < 5 * 60 || isActive) &&
+                "opacity-20 cursor-not-allowed hover:scale-100",
+            )}
             onClick={() => subtractTime(5)}
-            title="Adicionar 5 minutos"
+            title="Diminuir 5 minutos"
           >
             <span className="text-xl font-bold font-mono">-</span>
             <span className="text-xl font-bold font-mono">5</span>
@@ -145,7 +150,7 @@ export default function PomodoroPage() {
               "hover:cursor-pointer w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl hover:scale-110 active:scale-95",
               isActive
                 ? "bg-white text-black hover:bg-gray-200"
-                : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-900/50"
+                : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-900/50",
             )}
             onClick={toggleTimer}
           >
@@ -341,7 +346,7 @@ function ModeButton({ active, icon, label, onClick }: ModeButtonProps) {
         "flex hover:cursor-pointer items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
         active
           ? "bg-white/10 text-white shadow-inner"
-          : "text-soft hover:text-white hover:bg-white/5"
+          : "text-soft hover:text-white hover:bg-white/5",
       )}
     >
       {icon}

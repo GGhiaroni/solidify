@@ -54,6 +54,53 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [finishedSession, setFinishedSession] = useState<string | null>(null);
 
   useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  const sendNotification = () => {
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "granted") {
+      const notification = new Notification("Sessão Finalizada! 🎯", {
+        body:
+          mode === "focus"
+            ? "Hora de descansar um pouco."
+            : "Pausa encerrada. Vamos focar?",
+      });
+
+      notification.onclick = () => {
+        window.focus();
+      };
+    }
+  };
+
+  useEffect(() => {
+    if (time === 0 && !isActive) {
+      const originalTitle = document.title;
+
+      const interval = setInterval(() => {
+        document.title =
+          document.title === "ACABOU! ⏰" ? originalTitle : "ACABOU! ⏰";
+      }, 1000);
+
+      const stopAlert = () => {
+        clearInterval(interval);
+        document.title = originalTitle;
+        window.removeEventListener("focus", stopAlert);
+      };
+
+      window.addEventListener("focus", stopAlert);
+
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener("focus", stopAlert);
+      };
+    }
+  }, [time, isActive]);
+
+  useEffect(() => {
     async function loadSessions() {
       const data = await getTodaysessions();
 
@@ -65,7 +112,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const playSound = (
-    type: "start" | "pause" | "ending" | "finished" | "restart"
+    type: "start" | "pause" | "ending" | "finished" | "restart",
   ) => {
     let file = "";
 
@@ -148,6 +195,8 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
 
     playSound("finished");
 
+    sendNotification();
+
     if (mode === "focus") {
       const minutesCompleted = initialTime / 60;
 
@@ -219,15 +268,21 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   };
 
   const subtractTime = (minutes: number) => {
-    setTime((prev) => prev - minutes * 60);
-    setInitialTime((prev) => prev - minutes * 60);
-  };
+    setTime((prev) => {
+      const newTime = prev - minutes * 60;
+      return newTime < 0 ? 0 : newTime;
+    });
 
+    setInitialTime((prev) => {
+      const newInitial = prev - minutes * 60;
+      return newInitial < 0 ? 0 : newInitial;
+    });
+  };
   const renameSession = (sessionId: string, newName: string) => {
     setTodaySessions((prev) =>
       prev.map((session) =>
-        session.id === sessionId ? { ...session, name: newName } : session
-      )
+        session.id === sessionId ? { ...session, name: newName } : session,
+      ),
     );
 
     updateSessionName(sessionId, newName);

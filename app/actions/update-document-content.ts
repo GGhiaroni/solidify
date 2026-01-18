@@ -2,10 +2,11 @@
 
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export async function updateDocumentContent(
   documentId: string,
-  content: string
+  content: string,
 ) {
   const clerkUser = await currentUser();
 
@@ -35,6 +36,8 @@ export async function updateDocumentContent(
       };
     }
 
+    revalidatePath("/cadernos");
+    revalidatePath(`/cadernos/${documentId}`);
     return { success: true };
   } catch (error) {
     console.error("Erro ao salvar o conteúdo da nota.", error);

@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -21,7 +22,6 @@ interface Session {
   createdAt: Date;
 }
 
-//interface, o que vai ficar disponível para todas as páginas da aplicação;
 interface PomodoroContextType {
   mode: TimerMode;
   initialTime: number;
@@ -30,8 +30,8 @@ interface PomodoroContextType {
   todaySessions: Session[];
   finishedSession: string | null;
   changeMode: (mode: TimerMode) => void;
-  toggleTimer: () => void; //ligar/desligar o cronômetro;
-  resetTimer: () => void; //resetar o cronômetro;
+  toggleTimer: () => void;
+  resetTimer: () => void;
   finishEarly: () => void;
   addTime: (minutes: number) => void;
   subtractTime: (minutes: number) => void;
@@ -39,19 +39,84 @@ interface PomodoroContextType {
   setFinishedSession: (id: string | null) => void;
 }
 
-//criando o contexto, que incialmente está vazio;
 const PomodoroContext = createContext({} as PomodoroContextType);
 
 export function PomodoroProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<TimerMode>("focus");
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(3 * 60);
-
-  const [initialTime, setInitialTime] = useState(3 * 60);
-
+  const [time, setTime] = useState(25 * 60);
+  const [initialTime, setInitialTime] = useState(25 * 60);
   const [todaySessions, setTodaySessions] = useState<Session[]>([]);
-
   const [finishedSession, setFinishedSession] = useState<string | null>(null);
+  const [expectedEndTime, setExpectedEndTime] = useState<number | null>(null);
+
+  const playSound = useCallback(
+    (type: "start" | "pause" | "ending" | "finished" | "restart") => {
+      const files = {
+        start: "/sounds/click-start-focus.wav",
+        pause: "/sounds/click-pause.wav",
+        ending: "/sounds/session-ending.wav",
+        finished: "/sounds/session-finished.wav",
+        restart: "/sounds/click-restart.wav",
+      };
+      const audio = new Audio(files[type]);
+      audio.volume = 0.6;
+      audio.play().catch((err) => console.error("Erro ao tocar áudio:", err));
+    },
+    [],
+  );
+
+  const sendNotification = useCallback(() => {
+    if (!("Notification" in window) || Notification.permission !== "granted")
+      return;
+    const notification = new Notification("Sessão Finalizada! 🎯", {
+      body:
+        mode === "focus"
+          ? "Hora de descansar um pouco."
+          : "Pausa encerrada. Vamos focar?",
+    });
+    notification.onclick = () => window.focus();
+  }, [mode]);
+
+  const changeMode = useCallback((newMode: TimerMode) => {
+    setMode(newMode);
+    setIsActive(false);
+    setExpectedEndTime(null);
+
+    const times = { focus: 25 * 60, short: 5 * 60, long: 15 * 60 };
+    setTime(times[newMode]);
+    setInitialTime(times[newMode]);
+  }, []);
+
+  const handleComplete = useCallback(async () => {
+    setIsActive(false);
+    setExpectedEndTime(null);
+    playSound("finished");
+    sendNotification();
+
+    if (mode === "focus") {
+      const minutesCompleted = Math.floor(initialTime / 60);
+      const studySessionSaved = await studySessionLog({
+        minutes: minutesCompleted,
+        date: new Date(),
+      });
+
+      const optimisticSession: Session = {
+        id: studySessionSaved.session?.id || Math.random().toString(),
+        duration: minutesCompleted,
+        createdAt: new Date(),
+        name: null,
+      };
+
+      setTodaySessions((prev) => [optimisticSession, ...prev]);
+      setFinishedSession(studySessionSaved.session?.id || null);
+      toast.success(`Parabéns! +${minutesCompleted} minutos registrados! 🔥`);
+      setTime(initialTime);
+    } else {
+      toast.info("Pausa finalizada. Hora de voltar!");
+      changeMode("focus");
+    }
+  }, [mode, initialTime, changeMode, playSound, sendNotification]);
 
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {
@@ -59,27 +124,50 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const sendNotification = () => {
-    if (!("Notification" in window)) return;
-
-    if (Notification.permission === "granted") {
-      const notification = new Notification("Sessão Finalizada! 🎯", {
-        body:
-          mode === "focus"
-            ? "Hora de descansar um pouco."
-            : "Pausa encerrada. Vamos focar?",
-      });
-
-      notification.onclick = () => {
-        window.focus();
-      };
+  useEffect(() => {
+    async function loadSessions() {
+      const data = await getTodaysessions();
+      if (Array.isArray(data)) setTodaySessions(data);
     }
-  };
+    loadSessions();
+  }, []);
+
+  useEffect(() => {
+    if (time === 120 && isActive) {
+      playSound("ending");
+      toast.info("Reta final! Faltam apenas 2 minutos. 🚀", {
+        autoClose: 5000,
+        toastId: "ending-toast",
+      });
+    }
+  }, [time, isActive, playSound]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isActive && expectedEndTime) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        const remaining = Math.round((expectedEndTime - now) / 1000);
+
+        if (remaining <= 0) {
+          setTime(0);
+          setIsActive(false);
+          setExpectedEndTime(null);
+          handleComplete();
+          clearInterval(interval);
+        } else {
+          setTime(remaining);
+        }
+      }, 500);
+    }
+
+    return () => clearInterval(interval);
+  }, [isActive, expectedEndTime, handleComplete]);
 
   useEffect(() => {
     if (time === 0 && !isActive) {
       const originalTitle = document.title;
-
       const interval = setInterval(() => {
         document.title =
           document.title === "ACABOU! ⏰" ? originalTitle : "ACABOU! ⏰";
@@ -90,9 +178,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
         document.title = originalTitle;
         window.removeEventListener("focus", stopAlert);
       };
-
       window.addEventListener("focus", stopAlert);
-
       return () => {
         clearInterval(interval);
         window.removeEventListener("focus", stopAlert);
@@ -100,149 +186,31 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     }
   }, [time, isActive]);
 
-  useEffect(() => {
-    async function loadSessions() {
-      const data = await getTodaysessions();
-
-      if (Array.isArray(data)) {
-        setTodaySessions(data);
-      }
-    }
-    loadSessions();
-  }, []);
-
-  const playSound = (
-    type: "start" | "pause" | "ending" | "finished" | "restart",
-  ) => {
-    let file = "";
-
-    switch (type) {
-      case "start":
-        file = "/sounds/click-start-focus.wav";
-        break;
-      case "pause":
-        file = "/sounds/click-pause.wav";
-        break;
-      case "ending":
-        file = "/sounds/session-ending.wav";
-        break;
-      case "finished":
-        file = "/sounds/session-finished.wav";
-        break;
-      case "restart":
-        file = "/sounds/click-restart.wav";
-        break;
-    }
-
-    if (file) {
-      const audio = new Audio(file);
-      audio.volume = 0.6;
-      audio.play().catch((err) => console.error("Erro ao tocar áudio:", err));
-    }
-  };
-
-  useEffect(() => {
-    if (time === 120 && isActive) {
-      playSound("ending");
-      toast.info("Reta final! Faltam apenas 2 minutos. 🚀", {
-        autoClose: 5000,
-        toastId: "ending-toast",
-      });
-    }
-  }, [time, isActive]);
-
-  const changeMode = (newMode: TimerMode) => {
-    setMode(newMode);
-    setIsActive(false);
-
-    switch (newMode) {
-      case "focus":
-        setTime(25 * 60);
-        setInitialTime(25 * 60);
-        break;
-      case "short":
-        setTime(5 * 60);
-        setInitialTime(5 * 60);
-        break;
-      case "long":
-        setTime(15 * 60);
-        setInitialTime(15 * 60);
-        break;
-    }
-  };
-
-  const toggleTimer = () => {
+  const toggleTimer = useCallback(() => {
     if (!isActive) {
       playSound("start");
+      setExpectedEndTime(Date.now() + time * 1000);
     } else {
       playSound("pause");
+      setExpectedEndTime(null);
     }
-    setIsActive(!isActive);
-  };
+    setIsActive((prev) => !prev);
+  }, [isActive, time, playSound]);
 
-  const addToTodaySessions = (minutes: number, realId?: string) => {
-    const optimisticSession: Session = {
-      id: realId || Math.random().toString(),
-      duration: minutes,
-      createdAt: new Date(),
-      name: null,
-    };
-    setTodaySessions((prev) => [optimisticSession, ...prev]);
-  };
-
-  const handleComplete = async () => {
+  const resetTimer = useCallback(() => {
     setIsActive(false);
-
-    playSound("finished");
-
-    sendNotification();
-
-    if (mode === "focus") {
-      const minutesCompleted = initialTime / 60;
-
-      const studySessionSaved = await studySessionLog({
-        minutes: minutesCompleted,
-        date: new Date(),
-      });
-
-      addToTodaySessions(minutesCompleted, studySessionSaved.session?.id);
-
-      setFinishedSession(studySessionSaved.session?.id || null);
-
-      toast.success(`Parabéns! +${minutesCompleted} minutos registrados! 🔥`);
-      setTime(initialTime);
-    } else {
-      toast.info("Pausa finalizada. Hora de voltar!");
-      changeMode("focus");
-    }
-  };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isActive && time > 0) {
-      interval = setInterval(() => {
-        setTime((prev) => prev - 1);
-      }, 1000);
-    } else if (time === 0 && isActive) {
-      setTimeout(() => handleComplete(), 0);
-    }
-    return () => clearInterval(interval);
-  }, [isActive, time]);
-
-  const resetTimer = () => {
-    setIsActive(false);
+    setExpectedEndTime(null);
     playSound("restart");
     changeMode(mode);
-  };
+  }, [mode, changeMode, playSound]);
 
-  const finishEarly = async () => {
+  const finishEarly = useCallback(async () => {
     setIsActive(false);
-
-    const secondsStudied = initialTime - time;
-    const minutesStudied = Math.floor(secondsStudied / 60);
+    setExpectedEndTime(null);
+    const minutesStudied = Math.floor((initialTime - time) / 60);
 
     if (minutesStudied < 1) {
-      toast.warn("Sessão muito curta para ser registrada.");
+      toast.warn("Sessão muito curta.");
       resetTimer();
       return;
     }
@@ -252,41 +220,56 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
       date: new Date(),
     });
 
+    setTodaySessions((prev) => [
+      {
+        id: studySessionSaved.session?.id || Math.random().toString(),
+        duration: minutesStudied,
+        createdAt: new Date(),
+        name: null,
+      },
+      ...prev,
+    ]);
+
     setFinishedSession(studySessionSaved.session?.id || null);
-
-    addToTodaySessions(minutesStudied, studySessionSaved.session?.id);
-
     toast.success(`Sessão encerrada. +${minutesStudied} min salvos! ✅`);
-
     playSound("finished");
     resetTimer();
-  };
+  }, [initialTime, time, resetTimer, playSound]);
 
-  const addTime = (minutes: number) => {
-    setTime((prev) => prev + minutes * 60);
-    setInitialTime((prev) => prev + minutes * 60);
-  };
+  const addTime = useCallback(
+    (minutes: number) => {
+      const secondsToAdd = minutes * 60;
+      setTime((prev) => prev + secondsToAdd);
+      setInitialTime((prev) => prev + secondsToAdd);
+      if (isActive && expectedEndTime) {
+        setExpectedEndTime((prev) =>
+          prev ? prev + secondsToAdd * 1000 : null,
+        );
+      }
+    },
+    [isActive, expectedEndTime],
+  );
 
-  const subtractTime = (minutes: number) => {
-    setTime((prev) => {
-      const newTime = prev - minutes * 60;
-      return newTime < 0 ? 0 : newTime;
-    });
+  const subtractTime = useCallback(
+    (minutes: number) => {
+      const secondsToSub = minutes * 60;
+      setTime((prev) => Math.max(0, prev - secondsToSub));
+      setInitialTime((prev) => Math.max(0, prev - secondsToSub));
+      if (isActive && expectedEndTime) {
+        setExpectedEndTime((prev) =>
+          prev ? prev - secondsToSub * 1000 : null,
+        );
+      }
+    },
+    [isActive, expectedEndTime],
+  );
 
-    setInitialTime((prev) => {
-      const newInitial = prev - minutes * 60;
-      return newInitial < 0 ? 0 : newInitial;
-    });
-  };
-  const renameSession = (sessionId: string, newName: string) => {
+  const renameSession = useCallback((sessionId: string, newName: string) => {
     setTodaySessions((prev) =>
-      prev.map((session) =>
-        session.id === sessionId ? { ...session, name: newName } : session,
-      ),
+      prev.map((s) => (s.id === sessionId ? { ...s, name: newName } : s)),
     );
-
     updateSessionName(sessionId, newName);
-  };
+  }, []);
 
   return (
     <PomodoroContext.Provider

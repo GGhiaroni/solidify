@@ -12,28 +12,28 @@ O **Solidify** é uma plataforma avançada de gestão de conhecimento e produtiv
 
 ## Visão de Engenharia & Decisões de Arquitetura
 
-Como este projeto utiliza uma stack de vanguarda, cada decisão foi tomada visando performance, tipagem estrita e escalabilidade.
+Cada decisão foi tomada visando performance, tipagem estrita e escalabilidade.
 
 ### Infraestrutura de Dados: Supabase & Prisma
 
-A persistência de dados foi um dos maiores desafios técnicos. Optamos pelo **Supabase (PostgreSQL)** devido à complexidade relacional do sistema de notas recursivas.
+A persistência de dados foi um dos maiores desafios técnicos. Optei pelo **Supabase (PostgreSQL)** devido à complexidade relacional do sistema de notas recursivas.
 
-- **Connection Pooling (PgBouncer):** Em ambientes serverless (Vercel), as conexões podem se esgotar rapidamente. Configuramos a `DATABASE_URL` para utilizar o **Transaction Pooler** na porta `6543`. Isso garante que a aplicação suporte múltiplas requisições simultâneas sem derrubar a instância do banco de dados.
+- **Connection Pooling (PgBouncer):** Em ambientes serverless (Vercel), as conexões podem se esgotar rapidamente. Configurei a `DATABASE_URL` para utilizar o **Transaction Pooler** na porta `6543`. Isso garante que a aplicação suporte múltiplas requisições simultâneas sem derrubar a instância do banco de dados.
 - **Prisma ORM:** Escolhido para garantir _Type-Safety_ de ponta a ponta. Toda a estrutura do banco é sincronizada com o TypeScript, garantindo que erros de schema sejam detectados em tempo de compilação.
 
 ### Autenticação: Clerk
 
-Implementamos o **Clerk** para gerenciar a identidade de forma robusta. Ele oferece proteção de rotas via Middleware e integração nativa com o Next.js, permitindo um fluxo de autenticação seguro e sem a necessidade de manter um backend dedicado para tokens e sessões.
+Implementei o **Clerk** para gerenciar a identidade de forma robusta. Ele oferece proteção de rotas via Middleware e integração nativa com o Next.js, permitindo um fluxo de autenticação seguro e sem a necessidade de manter um backend dedicado para tokens e sessões.
 
 ### Resiliência em Segundo Plano: O Sistema Pomodoro
 
-Navegadores modernos aplicam _throttling_ (redução de recursos) em abas inativas, o que costuma "congelar" cronômetros baseados em `setInterval`.
+Navegadores modernos aplicam _throttling_ em abas inativas, o que costuma "congelar" cronômetros baseados em `setInterval`.
 
-- **Solução Técnica:** Implementamos uma lógica de **Timestamp Synchronization**. O cronômetro não conta segundos de forma isolada; ele calcula o momento exato do término (`expectedEndTime`). Caso o usuário mude de aba e o navegador pause o JavaScript, ao retornar, o sistema recalcula o tempo restante baseado no relógio do sistema, mantendo a precisão atômica.
+- **Solução Técnica:** Implementei uma lógica de **Timestamp Synchronization**. O cronômetro não conta segundos de forma isolada; ele calcula o momento exato do término (`expectedEndTime`). Caso o usuário mude de aba e o navegador pause o JavaScript, ao retornar, o sistema recalcula o tempo restante baseado no relógio do sistema, mantendo a precisão atômica.
 
 ### Inteligência Artificial: Gemini IA Pro
 
-Utilizamos a API do **Google Generative AI** para transformar conteúdo estático em planos de ação. O sistema analisa notas e gera "Jornadas de Estudo" (Roadmaps) estruturadas, integrando inteligência artificial diretamente no fluxo de trabalho do usuário.
+Utilizei a API do **Google Generative AI** para transformar conteúdo estático em planos de ação. O sistema analisa notas e gera "Jornadas de Estudo" (Roadmaps) estruturadas, integrando inteligência artificial diretamente no fluxo de trabalho do usuário.
 
 ---
 
@@ -53,9 +53,7 @@ Utilizamos a API do **Google Generative AI** para transformar conteúdo estátic
 
 ---
 
-## 🖼️ Interface do Projeto
-
-Para garantir a padronização visual deste README, as imagens abaixo seguem dimensões fixas:
+## Interface do Projeto
 
 <table width="100%">
   <tr>
@@ -87,6 +85,12 @@ Para garantir a padronização visual deste README, as imagens abaixo seguem dim
       <p align="center"><b>Lofi Player</b></p>
       <img src="/public/lofi-player.png" width="100%" height="250px" style="object-fit: cover; border-radius: 8px;" />
     </td>
+     <td width="50%">
+      <p align="center"><b>Mini Pomodoro Ativo durante navegação(Context)</b></p>
+      <img src="/public/mini-pomodoro.png" width="100%" height="250px" style="object-fit: cover; border-radius: 8px;" />
+    </td>
+  </tr>
+  <tr>
      <td width="50%">
       <p align="center"><b>Mini Pomodoro Ativo durante navegação(Context)</b></p>
       <img src="/public/mini-pomodoro.png" width="100%" height="250px" style="object-fit: cover; border-radius: 8px;" />
@@ -134,3 +138,7 @@ npx prisma db push
 # Iniciar o servidor de desenvolvimento
 npm run dev
 ```
+
+---
+
+## desenvolvido por Gabriel Tiziano.

@@ -10,11 +10,13 @@ import { toast } from "react-toastify";
 interface SubPagesListProps {
   childrenDocs: Document[];
   isRootNode: boolean;
+  parentDocumentId: string;
 }
 
 export const SubPagesList = ({
   childrenDocs,
   isRootNode,
+  parentDocumentId,
 }: SubPagesListProps) => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 

@@ -19,6 +19,9 @@ const lora = Lora({
 export const metadata: Metadata = {
   title: "solidify",
   description: "solidify your knowledge.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

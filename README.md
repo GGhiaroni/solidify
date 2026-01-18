@@ -85,10 +85,6 @@ Utilizei a API do **Google Generative AI** para transformar conteúdo estático 
       <p align="center"><b>Lofi Player</b></p>
       <img src="/public/lofi-player.png" width="100%" height="250px" style="object-fit: cover; border-radius: 8px;" />
     </td>
-     <td width="50%">
-      <p align="center"><b>Mini Pomodoro Ativo durante navegação(Context)</b></p>
-      <img src="/public/mini-pomodoro.png" width="100%" height="250px" style="object-fit: cover; border-radius: 8px;" />
-    </td>
   </tr>
   <tr>
      <td width="50%">
